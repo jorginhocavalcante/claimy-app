@@ -258,8 +258,8 @@
             }, 100);
 
             try {
-                // CHAMADA REAL PARA A API DA CLAIMY
-                const response = await fetch('http://localhost:3000/v1/scan', {
+                // CHAMADA REAL PARA A API DA CLAIMY NO RENDER
+                const response = await fetch('https://claimy-app.onrender.com/v1/scan', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: emailInput })
