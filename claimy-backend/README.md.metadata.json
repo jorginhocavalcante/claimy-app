@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_OTHER",
+  "summary":  "Guia de operação e configuração do backend da CLAIMY. Detalha como instalar dependências, configurar variáveis de ambiente e rodar o servidor em modo de desenvolvimento. Essencial para a continuidade do projeto.",
+  "updatedAt":  "2026-04-22T03:53:02.882193800Z",
+  "requestFeedback":  true
+}

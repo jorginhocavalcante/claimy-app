@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_OTHER",
+  "summary":  "Modelagem do banco de dados da CLAIMY. Utiliza diagramas Mermaid para visualizar as relações entre usuários, conexões externas, eventos detectados (Findings) e processos jurídicos (Claims). Essencial para a fase de desenvolvimento do backend.",
+  "updatedAt":  "2026-04-22T03:46:59.152911700Z",
+  "requestFeedback":  true
+}

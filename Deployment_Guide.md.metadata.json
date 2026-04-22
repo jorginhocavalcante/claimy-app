@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_OTHER",
+  "summary":  "Guia detalhado de deploy para a CLAIMY. Instruções passo a passo para hospedar o frontend na Vercel e o backend no Render. Inclui dicas sobre variáveis de ambiente e conexão entre os serviços. O roteiro final para colocar a startup online.",
+  "updatedAt":  "2026-04-22T03:57:24.296994500Z",
+  "requestFeedback":  true
+}

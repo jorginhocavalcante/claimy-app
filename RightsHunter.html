@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rights Hunter | Autonomous Justice AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --card-bg: #0f1218;
+            --accent-color: #00f2ff;
+            --gold: #d4af37;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 242, 255, 0.05) 0%, transparent 50%),
+                              radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .badge-live {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--accent-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: 1px solid var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .main-container {
+            padding: 3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            margin-bottom: 3rem;
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 242, 255, 0.3);
+        }
+
+        .stat-card h3 {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .stat-card .trend {
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trend.positive { color: var(--success); }
+
+        .claim-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .claims-list {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .claim-item {
+            background: rgba(255,255,255,0.02);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        .claim-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(0, 242, 255, 0.2);
+        }
+
+        .claim-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .claim-info p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .claim-status {
+            text-align: right;
+        }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .status-found { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .status-processing { background: rgba(0, 242, 255, 0.1); color: var(--accent-color); }
+        .status-recovered { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+        .claim-amount {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .hunt-console {
+            background: #000;
+            border-radius: 24px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            height: 300px;
+            position: relative;
+        }
+
+        .console-header {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .console-line {
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+
+        .console-line span { color: var(--accent-color); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #00a2ff);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            width: 65%;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        @media (max-width: 900px) {
+            .claim-section { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">RIGHTS<span>HUNTER</span> <div class="badge-live">Live Hunting</div></div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <span style="color: var(--text-dim); font-size: 0.9rem;">Olá, Jorge 👋</span>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gold); border: 2px solid var(--accent-color);"></div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="header-section">
+            <h1>Sua Justiça, em Autopilot.</h1>
+            <p>Nossa IA está escaneando seus dados em busca de indenizações não reclamadas.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Recuperação Estimada (Total)</h3>
+                <div class="value">R$ 14.250,00</div>
+                <div class="trend positive">↑ 12% este mês</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 78%;"></div></div>
+            </div>
+            <div class="stat-card">
+                <h3>Seu Lucro (30% Success Fee)</h3>
+                <div class="value" style="color: var(--gold)">R$ 4.275,00</div>
+                <div class="trend" style="color: var(--text-dim)">Projeção de receita bruta</div>
+            </div>
+            <div class="stat-card">
+                <h3>Assinaturas Ativas</h3>
+                <div class="value">1.240</div>
+                <div class="trend positive">MRR: R$ 37.076,00</div>
+            </div>
+        </div>
+
+        <div class="claim-section">
+            <div class="claims-list">
+                <div class="section-title">
+                    <h2>Oportunidades Encontradas</h2>
+                    <a href="#" style="color: var(--accent-color); text-decoration: none; font-size: 0.9rem;">Ver todas</a>
+                </div>
+
+                <div class="claim-item">
+                    <div class="claim-info">
+                        <div class="status-pill status-found">Atraso de Voo (ANAC 400)</div>
+                        <h4>Voo LA8023 - São Paulo > Paris</h4>
+                        <p>22 de Março, 2026 • Atraso superior a 4 horas</p>
+                    </div>
+                    <div class="claim-status">
+                        <div class="claim-amount">R$ 6.500,00</div>
+                        <button class="btn-primary" style="padding: 8px 16px; font-size: 0.8rem; margin-top: 10px; background: var(--gold);">Enviar para Jurídico</button>
+                    </div>
+                </div>
+
+                <div class="claim-item">
+                    <div class="claim-info">
+                        <div class="status-pill status-processing">Cobrança Indevida</div>
+                        <h4>Banco Itaú - Tarifa Max Conta</h4>
+                        <p>Cobrada em Conta Salário (Resolução 3.402 CMN)</p>
+                    </div>
+                    <div class="claim-status">
+                        <div class="claim-amount">R$ 1.240,00</div>
+                        <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 5px;">Em processamento...</div>
+                    </div>
+                </div>
+
+                <div class="claim-item">
+                    <div class="claim-info">
+                        <div class="status-pill status-found">Privacidade (LGPD)</div>
+                        <h4>Vazamento de Dados - E-commerce X</h4>
+                        <p>Seus dados foram expostos em Jan/2026</p>
+                    </div>
+                    <div class="claim-status">
+                        <div class="claim-amount">R$ 3.000,00</div>
+                        <button class="btn-primary" style="padding: 8px 16px; font-size: 0.8rem; margin-top: 10px;">Gerar Notificação</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-panel">
+                <div class="stat-card" style="padding: 1.5rem; border-color: var(--gold);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="margin: 0;">Plano Hunter VIP</h3>
+                        <span class="badge-live" style="font-size: 0.6rem; border-color: var(--gold); color: var(--gold);">ATIVO</span>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Monitoramento 24/7 em 3 contas de e-mail e 5 bancos.</p>
+                </div>
+
+                <div class="stat-card" style="padding: 1.5rem;">
+                    <h3>Status do Jurídico</h3>
+                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                            <span>Aguardando Revisão</span>
+                            <span style="color: var(--warning)">12</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                            <span>Assinados/Protocolados</span>
+                            <span style="color: var(--success)">45</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hunt-console">
+                    <div class="console-header">> HUNTER_ENGINE_V1.0</div>
+                    <div class="console-line"><span>[14:22:01]</span> Inicializando varredura de IMAP...</div>
+                    <div class="console-line"><span>[14:22:05]</span> 1.432 e-mails processados.</div>
+                    <div class="console-line"><span>[14:22:08]</span> <b style="color: var(--warning)">MATCH!</b> Padrão detectado em "Booking.com"</div>
+                    <div class="console-line"><span>[14:22:09]</span> Verificando jurisprudência (TJSP)...</div>
+                    <div class="console-line"><span>[14:22:12]</span> Potencial de ganho: R$ 4.500,00.</div>
+                    <div class="console-line"><span>[14:22:15]</span> Aguardando aprovação do usuário...</div>
+                </div>
+
+                <a href="#" class="btn-primary">ATIVAR CAÇA AUTOMÁTICA</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAIMY | Justiça em Autopilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030507;
+            --accent: #00f2ff;
+            --accent-glow: rgba(0, 242, 255, 0.4);
+            --card: #0c0f14;
+            --text: #ffffff;
+            --text-dim: #8e99a8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at top right, rgba(0, 242, 255, 0.05) 0%, transparent 40%);
+        }
+
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .logo-text span { color: var(--accent); }
+
+        .hero {
+            padding: 80px 5% 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 24px;
+            letter-spacing: -3px;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 48px;
+        }
+
+        .main-cta-box {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 32px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 18px;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .btn-claim {
+            width: 100%;
+            background: var(--accent);
+            color: #000;
+            padding: 20px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-claim:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feat-item {
+            background: rgba(255,255,255,0.02);
+            padding: 32px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+
+        .feat-item:hover {
+            border-color: var(--accent);
+            background: rgba(0, 242, 255, 0.03);
+        }
+
+        .feat-item h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+
+        .feat-item p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        #loading {
+            display: none;
+            padding: 40px 0;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: 0.3s;
+            box-shadow: 0 0 10px var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="claimy_logo_premium_1776829501557.png" alt="CLAIMY Logo" class="logo-img">
+            <div class="logo-text">CLAIM<span>Y</span></div>
+        </div>
+        <div style="font-weight: 600; font-size: 0.9rem; color: var(--accent);">Monitorando Agora ⚡</div>
+    </header>
+
+    <section class="hero">
+        <h1>Sua justiça em <span>Autopilot.</span></h1>
+        <p>A primeira inteligência artificial que caça e recupera indenizações das empresas enquanto você dorme. Vôos, Bancos e Dados Expostos.</p>
+
+        <div class="main-cta-box">
+            <div id="form-ui">
+                <input type="email" placeholder="Seu e-mail principal" class="input-field" id="email">
+                <button class="btn-claim" onclick="startScan()">INICIAR CAÇA GRÁTIS</button>
+                <p style="margin-top: 15px; font-size: 0.75rem; color: var(--text-dim);">30% Success Fee | Sem custos iniciais</p>
+            </div>
+
+            <div id="loading">
+                <h3 id="status">Conectando ao sistema...</h3>
+                <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+                <p style="font-size: 0.8rem; color: var(--text-dim);">Escaneando histórico de e-mails e transações bancárias...</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="features-grid">
+        <div class="feat-item">
+            <h3>Vôos Atrasados</h3>
+            <p>Até R$ 10.000 por passageiro em atrasos acima de 4h ou cancelamentos.</p>
+        </div>
+        <div class="feat-item">
+            <h3>Taxas Abusivas</h3>
+            <p>Recuperamos tarifas bancárias cobradas indevidamente nos últimos 2 anos.</p>
+        </div>
+        <div class="feat-item">
+            <h3>Dados Vazados</h3>
+            <p>Justiça para quem teve dados expostos por falhas de segurança de empresas.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 CLAIMY TECHNOLOGIES. <br> Powered by Advanced AI Legal Engine.</p>
+    </footer>
+
+    <script>
+        async function startScan() {
+            const emailInput = document.getElementById('email').value;
+            if(!emailInput) return alert('Por favor, insira seu e-mail.');
+
+            // UI Changes
+            document.getElementById('form-ui').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            let p = 0;
+            const fill = document.getElementById('fill');
+            const statusText = document.getElementById('status');
+            
+            // Simulação visual de progresso enquanto a API processa
+            const progressInterval = setInterval(() => {
+                if (p < 90) {
+                    p += 1;
+                    fill.style.width = p + '%';
+                }
+            }, 100);
+
+            try {
+                // CHAMADA REAL PARA A API DA CLAIMY
+                const response = await fetch('http://localhost:3000/v1/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailInput })
+                });
+
+                if (!response.ok) throw new Error('Servidor offline');
+
+                const result = await response.json();
+                
+                // Finaliza o progresso
+                p = 100;
+                fill.style.width = '100%';
+                statusText.innerText = "Varredura Concluída!";
+
+                // Salva os dados no Navegador para o Dashboard ler
+                localStorage.setItem('claimy_results', JSON.stringify(result.data));
+                localStorage.setItem('claimy_user_email', emailInput);
+
+                setTimeout(() => {
+                    window.location.href = 'Claimy_Dashboard.html';
+                }, 1000);
+
+            } catch (error) {
+                console.error('Erro na API:', error);
+                // Fallback para demonstração caso o servidor não esteja rodando localmente
+                statusText.innerText = "Modo Demo Ativado (Servidor Offline)";
+                setTimeout(() => {
+                    p = 100;
+                    fill.style.width = '100%';
+                    setTimeout(() => window.location.href = 'Claimy_Dashboard.html', 1000);
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>

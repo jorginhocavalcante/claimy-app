@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rights Hunter | Recupere seu dinheiro esquecido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030507;
+            --accent: #00f2ff;
+            --accent-glow: rgba(0, 242, 255, 0.5);
+            --card: #0c0f14;
+            --text: #ffffff;
+            --text-dim: #8e99a8;
+            --gold: #d4af37;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 5% 60px;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(0, 242, 255, 0.08) 0%, transparent 70%);
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent);
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        h1 span {
+            color: var(--accent);
+            display: block;
+        }
+
+        .hero p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* Scanner Box */
+        .scanner-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 32px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .scanner-container::after {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 34px;
+            background: linear-gradient(45deg, transparent, var(--accent), transparent);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            margin-left: 5px;
+        }
+
+        input {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 16px;
+            border-radius: 16px;
+            color: white;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            outline: none;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .btn-cta {
+            width: 100%;
+            background: var(--accent);
+            color: #000;
+            padding: 18px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 242, 255, 0.2);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px var(--accent-glow);
+        }
+
+        /* Social Proof */
+        .social-proof {
+            padding: 60px 5%;
+            text-align: center;
+        }
+
+        .trust-icons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            opacity: 0.5;
+            filter: grayscale(1);
+            flex-wrap: wrap;
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feat-card {
+            background: rgba(255,255,255,0.02);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .feat-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .feat-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        /* Why Section */
+        .why-section {
+            padding: 100px 5%;
+            text-align: center;
+            background: rgba(0, 242, 255, 0.02);
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .why-item i {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 5%;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .scanning-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent);
+            top: 0;
+            left: 0;
+            animation: scan 3s infinite linear;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; }
+            .scanner-container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <div class="badge">A Justiça agora é Automática</div>
+        <h1>Descubra o dinheiro que <span>as empresas te devem.</span></h1>
+        <p>Atrasos de voo, taxas bancárias indevidas e vazamento de dados. Nossa IA caça e recupera suas indenizações sem você levantar um dedo.</p>
+
+        <div class="scanner-container">
+            <div class="scanning-line" id="scanner"></div>
+            <div id="form-content">
+                <div class="input-group">
+                    <label>Seu e-mail principal (onde recebe confirmações)</label>
+                    <input type="email" placeholder="nome@exemplo.com.br" id="email">
+                </div>
+                <div class="input-group">
+                    <label>Celular para aviso de crédito</label>
+                    <input type="tel" placeholder="(11) 99999-9999">
+                </div>
+                <button class="btn-cta" onclick="startScan()">INICIAR DIAGNÓSTICO GRÁTIS</button>
+                <p style="font-size: 0.75rem; margin-top: 15px; color: var(--text-dim);">🔒 Seus dados são protegidos por criptografia de ponta.</p>
+            </div>
+            
+            <div id="loading-content" style="display: none; padding: 40px 0;">
+                <h3 style="color: var(--accent); margin-bottom: 20px;">Escaneando base de dados...</h3>
+                <div style="font-size: 0.9rem; color: var(--text-dim);" id="status-text">Conectando ao sistema da ANAC...</div>
+                <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px; overflow: hidden;">
+                    <div id="progress" style="height: 100%; background: var(--accent); width: 0%; transition: 0.3s;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="social-proof">
+        <p style="margin-bottom: 30px; font-weight: 600; color: var(--text-dim);">RESPALDADO POR:</p>
+        <div class="trust-icons">
+            <span style="font-weight: 800; font-size: 1.2rem;">CDC</span>
+            <span style="font-weight: 800; font-size: 1.2rem;">LGPD</span>
+            <span style="font-weight: 800; font-size: 1.2rem;">ANAC</span>
+            <span style="font-weight: 800; font-size: 1.2rem;">FEBRABAN</span>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feat-card">
+            <h3>Vôos e Viagens</h3>
+            <p>Vôo atrasou mais de 4h ou foi cancelado nos últimos 5 anos? Você pode ter até R$ 10.000 para receber por trecho.</p>
+        </div>
+        <div class="feat-card">
+            <h3>Abusos Bancários</h3>
+            <p>Taxas em conta salário ou juros abusivos escondidos. Nossa IA varre seus extratos e identifica cobranças ilegais.</p>
+        </div>
+        <div class="feat-card">
+            <h3>Dados Expostos</h3>
+            <p>Seus dados vazaram? Muitas empresas estão sendo condenadas a pagar indenizações por danos morais. Nós checamos para você.</p>
+        </div>
+    </section>
+
+    <section class="why-section">
+        <h2>Por que o Rights Hunter?</h2>
+        <div class="why-grid">
+            <div class="why-item">
+                <span style="font-size: 2.5rem;">⚡</span>
+                <h4 style="margin-top: 15px;">Velocidade IA</h4>
+                <p style="color: var(--text-dim); margin-top: 10px;">O que um advogado leva meses, nossa IA faz em segundos.</p>
+            </div>
+            <div class="why-item">
+                <span style="font-size: 2.5rem;">💰</span>
+                <h4 style="margin-top: 15px;">Risco Zero</h4>
+                <p style="color: var(--text-dim); margin-top: 10px;">Você só paga uma pequena taxa se nós recuperarmos o dinheiro.</p>
+            </div>
+            <div class="why-item">
+                <span style="font-size: 2.5rem;">🤖</span>
+                <h4 style="margin-top: 15px;">100% Autônomo</h4>
+                <p style="color: var(--text-dim); margin-top: 10px;">Nós cuidamos da burocracia. Você só fornece a chave PIX.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Rights Hunter | Todos os direitos reservados. <br> O uso desta plataforma está sujeito aos Termos de Serviço e Política de Privacidade.</p>
+    </footer>
+
+    <script>
+        function startScan() {
+            const email = document.getElementById('email').value;
+            if(!email) { alert('Por favor, insira seu e-mail.'); return; }
+
+            document.getElementById('form-content').style.display = 'none';
+            document.getElementById('loading-content').style.display = 'block';
+            document.getElementById('scanner').style.display = 'block';
+
+            let progress = 0;
+            const statusTexts = [
+                "Acessando base da ANAC...",
+                "Varrendo histórico de vôos...",
+                "Checando vazamentos de dados (LGPD)...",
+                "Analisando resoluções do Banco Central...",
+                "Cruzando dados com jurisprudência...",
+                "Finalizando diagnóstico..."
+            ];
+
+            const interval = setInterval(() => {
+                progress += 2;
+                document.getElementById('progress').style.width = progress + '%';
+                
+                if(progress % 16 === 0) {
+                    const textIdx = Math.floor(progress / 16.6);
+                    if(statusTexts[textIdx]) {
+                        document.getElementById('status-text').innerText = statusTexts[textIdx];
+                    }
+                }
+
+                if(progress >= 100) {
+                    clearInterval(interval);
+                    alert('VARREDURA CONCLUÍDA!\n\nEncontramos 3 ocorrências com alto potencial de indenização.\n\nClique OK para ver seu Dashboard de Justiça.');
+                    // Aqui redirecionaria para o Dashboard.html
+                    window.location.href = 'RightsHunter.html';
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>

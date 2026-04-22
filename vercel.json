@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "public": true,
+  "rewrites": [
+    { "source": "/", "destination": "/Claimy_Landing.html" },
+    { "source": "/dashboard", "destination": "/Claimy_Dashboard.html" }
+  ]
+}

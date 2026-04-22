@@ -1,0 +1,6 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary":  "Plano de execução técnica para a construção da CLAIMY. Detalha a arquitetura do Hunter Engine, segurança de dados, integrações (OAuth2, Open Finance) e o roadmap de desenvolvimento do MVP até a escala.",
+  "updatedAt":  "2026-04-22T03:46:51.343217700Z",
+  "requestFeedback":  true
+}

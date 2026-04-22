@@ -1,0 +1,18 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+RIGHTS
+HUNTER
+Live Hunting
+Olá, Jorge 👋
+Sua Justiça, em Autopilot.
+Nossa IA está escaneando seus dados em busca de indenizações não reclamadas.
+Recuperação Estimada
+R$ 14.250,00
+↑ 12% este mês
+Casos Identificados
+08
+Voo, Banco, LGPD
+
+</current_dom>
