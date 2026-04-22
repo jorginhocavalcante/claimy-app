@@ -1,0 +1,21 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+CLAIM
+Y
+Monitorando Agora ⚡
+Sua justiça em
+Autopilot.
+A primeira inteligência artificial que caça e recupera indenizações das empresas enquanto você dorme. Vôos, Bancos e Dados Expostos.
+[0] (497,505)<input class='input-field' id='email' placeholder='Seu e-mail principal' />
+[1] (497,599)<button class='btn-claim'>INICIAR CAÇA GRÁTIS />
+30% Success Fee | Sem custos iniciais
+Vôos Atrasados
+Até R$ 10.000 por passageiro em atrasos acima de 4h ou cancelamentos.
+Taxas Abusivas
+Recuperamos tarifas bancárias cobradas indevidamente nos últimos 2 anos.
+Dados Vazados
+Justiça para quem teve dados expostos por falhas de segurança de empresas.
+
+</current_dom>
