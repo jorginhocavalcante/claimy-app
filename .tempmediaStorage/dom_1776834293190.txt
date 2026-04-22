@@ -1,0 +1,50 @@
+<current_dom_explanation>
+This is a temporary snapshot of the current page's DOM structure. The DOM will change if you navigate to or interact with another page. Use a tool like browser_get_dom to capture and preserve the DOM in your trajectory if needed for later reference.
+</current_dom_explanation>
+<current_dom>
+Build durable agents, data pipelines, and background jobs with an SDK
+[0] (596,24)<a class='flex h-26 w-fit items-center gap-10 bg-gray-900 px-10 font-medium text-white' href='/workflows' />
+	[1] (592,24)<span >Learn about Workflows />
+[2] (107,85)<a href='/' />
+[3] (181,85)<div  />
+	[4] (181,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary px-[--nav-bar-px] py-[--nav-bar-py]' href='#' />
+		[5] (181,85)<span  />
+			[6] (181,85)<span >Product />
+[7] (223,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary whitespace-nowrap px-[--nav-bar-px] py-[--nav-bar-py]' href='/pricing' />
+	[8] (223,85)<span  />
+		[9] (223,85)<span >Pricing />
+[10] (271,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary whitespace-nowrap px-[--nav-bar-px] py-[--nav-bar-py]' href='/customers' />
+	[11] (271,85)<span  />
+		[12] (271,85)<span >Customers />
+[13] (315,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary whitespace-nowrap px-[--nav-bar-px] py-[--nav-bar-py]' href='/blog' />
+	[14] (315,85)<span  />
+		[15] (315,85)<span >Blog />
+[16] (350,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary whitespace-nowrap px-[--nav-bar-px] py-[--nav-bar-py]' href='/docs' />
+	[17] (350,85)<span  />
+		[18] (350,85)<span >Docs />
+[19] (395,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary whitespace-nowrap px-[--nav-bar-px] py-[--nav-bar-py]' href='/changelog' />
+	[20] (395,85)<span  />
+		[21] (395,85)<span >Changelog />
+[22] (447,85)<div  />
+	[23] (447,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary px-[--nav-bar-px] py-[--nav-bar-py]' href='#' />
+		[24] (447,85)<span  />
+			[25] (447,85)<span >Company />
+[26] (792,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary mr-10 px-[--nav-bar-px] py-[--nav-bar-py] lg:mr-0' href='/contact' />
+	[27] (792,85)<span  />
+		[28] (792,85)<span >Contact />
+[29] (834,85)<a class='group relative z-[1] inline-flex cursor-pointer transition-colors text-body-sm text-text-primary hidden whitespace-nowrap px-[--nav-bar-px] xl:py-[--nav-bar-py] [@media(min-width:400px)]:block' href='https://dashboard.render.com/' />
+	[30] (834,85)<span  />
+		[31] (834,85)<span >Sign In />
+[32] (895,85)<a class='ease group relative z-[1] cursor-pointer bg-background--inverted px-20 py-15 transition-colors motion-safe:duration-300 motion-reduce:duration-0 lg:px-30 lg:py-24 text-text-primary--inverted dark:active:text-white lg:dark:hover:text-white ml-10 xl:ml-20 whitespace-nowrap' href='https://dashboard.render.com/register' />
+	[33] (895,85)<span >Get Started />
+Your fastest path to production for
+any =
+Intuitive infrastructure to scale any app or agent from your first user to your billionth.
+[34] (170,944)<a class='ease transition-colors group relative z-[1] flex cursor-pointer items-center justify-between overflow-hidden font-montreal whitespace-nowrap motion-safe:duration-150 motion-reduce:duration-0 lg:motion-safe:duration-300 lg:motion-reduce:duration-0 bg-background--inverted text-text-primary--inverted dark:lg:hover:text-white dark:active:text-white dark:focus-visible:text-white h-[70px] text-body-lg py-20 px-24 gap-15 lg:[--button-arrow-offset:2px]' href='https://dashboard.render.com/register' />
+	[35] (163,944)<span >Start for free />
+[36] (255,944)<a class='ease transition-colors group relative z-[1] flex cursor-pointer items-center justify-between overflow-hidden font-montreal whitespace-nowrap motion-safe:duration-150 motion-reduce:duration-0 lg:motion-safe:duration-300 lg:motion-reduce:duration-0 bg-transparent text-text-primary lg:hover:text-text-primary--inverted active:text-text-primary--inverted focus-visible:text-text-primary--inverted border-1 border-text-primary h-[70px] text-body-lg py-20 px-24 gap-15' href='/contact' />
+	[37] (255,944)<span >Get in touch />
+[38] (977,940)<button aria-label='Toggle theme' class='fixed right-20 bottom-20 z-[100] grid size-[45px] grid-cols-2 overflow-hidden border-1 border-gray-900 transition-colors ease-global motion-safe:duration-350 motion-reduce:duration-0 md:right-30 md:bottom-30 dark:border-white border-gray-900 bg-white text-gray-900' />
+	[39] (977,940)<div  />
+
+</current_dom>

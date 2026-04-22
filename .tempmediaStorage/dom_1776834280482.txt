@@ -1,0 +1,27 @@
+[0] (497,500)<div  />
+	[1] (104,35)<a href='https://render.com/' />
+	Sign In to Render
+	[2] (400,228)<button class='type-interface-01 button-secondary-text hover:button-secondary-background--hover hover:button-secondary-text--hover active:button-secondary-background--active active:button-secondary-text--hover--active border border-solid button-secondary-border h-10 py-2.5 px-3 focus-visible:outline focus-visible:outline-focus-action outline-offset-2 outline-2 group w-full inline-flex items-center justify-center group/button' />
+		[3] (400,228)<div  />
+			[4] (404,228)<span >GitHub />
+	[5] (464,228)<button class='type-interface-01 button-secondary-text hover:button-secondary-background--hover hover:button-secondary-text--hover active:button-secondary-background--active active:button-secondary-text--hover--active border border-solid button-secondary-border h-10 py-2.5 px-3 focus-visible:outline focus-visible:outline-focus-action outline-offset-2 outline-2 group w-full inline-flex items-center justify-center group/button' />
+		[6] (464,228)<div  />
+			[7] (469,228)<span >GitLab />
+	[8] (529,228)<button class='type-interface-01 button-secondary-text hover:button-secondary-background--hover hover:button-secondary-text--hover active:button-secondary-background--active active:button-secondary-text--hover--active border border-solid button-secondary-border h-10 py-2.5 px-3 focus-visible:outline focus-visible:outline-focus-action outline-offset-2 outline-2 group w-full inline-flex items-center justify-center group/button' />
+		[9] (529,228)<div  />
+			[10] (535,228)<span >Bitbucket />
+	[11] (594,228)<button class='type-interface-01 button-secondary-text hover:button-secondary-background--hover hover:button-secondary-text--hover active:button-secondary-background--active active:button-secondary-text--hover--active border border-solid button-secondary-border h-10 py-2.5 px-3 focus-visible:outline focus-visible:outline-focus-action outline-offset-2 outline-2 group w-full inline-flex items-center justify-center group/button' />
+		[12] (594,228)<div  />
+			[13] (599,228)<span >Google />
+	or
+	[14] (497,330)<label class='inline-block type-label-01 text-primary mb-2'>Email />
+	[15] (497,374)<input class='h-10 truncate type-interface-01 w-full m-0 py-2.5 px-3 input-background placeholder:input-text--placeholder outline-2 focus-visible:outline focus:outline-focus-action border border-solid rounded-none appearance-none input-text input-border hover:input-border--hover' id='_r_2_' placeholder='your@email.com' />
+	[16] (497,426)<label class='inline-block type-label-01 text-primary mb-2'>Password />
+	[17] (497,469)<input class='h-10 truncate type-interface-01 w-full m-0 py-2.5 px-3 input-background placeholder:input-text--placeholder outline-2 focus-visible:outline focus:outline-focus-action border border-solid rounded-none appearance-none input-text input-border hover:input-border--hover pr-12' id='_r_3_' placeholder='correct horse battery staple' />
+	[18] (615,469)<button aria-label='Show password' class='type-interface-01 button-ghost-text hover:button-ghost-background--hover hover:button-ghost-text--hover active:button-ghost-background--active active:button-ghost-text--active py-2.5 px-3 focus-visible:outline focus-visible:outline-focus-action outline-2 flex items-center absolute top-px right-px h-[calc(100%-2px)] -outline-offset-2 group/button' />
+	[19] (386,547)<button class='type-interface-02 button-primary-background button-primary-text hover:button-primary-text--hover active:button-primary-text--active hover:button-primary-background--hover active:button-primary-background--active h-12 py-3 px-4 focus-visible:outline focus-visible:outline-focus-action outline-offset-2 outline-2 flex items-center group/button'>Sign in />
+	[20] (391,622)<a class='font-inherit text-inherit hover:text-inherit hover:underline relative no-underline link-text--highlight hover:link-text--highlight--hover active:link-text--highlight--active focus-visible:outline focus:outline-focus-action outline-offset-2 outline-2' href='/login/sso'>Sign in with SSO />
+	Need an account?
+	[21] (429,654)<a class='font-inherit text-inherit hover:text-inherit hover:underline relative no-underline link-text--highlight hover:link-text--highlight--hover active:link-text--highlight--active focus-visible:outline focus:outline-focus-action outline-offset-2 outline-2' href='/register'>Sign up />
+	Forgot your password?
+	[22] (444,686)<a class='font-inherit text-inherit hover:text-inherit hover:underline relative no-underline link-text--highlight hover:link-text--highlight--hover active:link-text--highlight--active focus-visible:outline focus:outline-focus-action outline-offset-2 outline-2' href='/password-reset'>Reset it />

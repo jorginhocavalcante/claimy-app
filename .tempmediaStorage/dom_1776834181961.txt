@@ -1,0 +1,29 @@
+Skip to content
+Sign in to
+GitHub
+to continue to
+Render
+[0] (500,288)<label >Username or email address />
+[1] (500,327)<input class='form-control  js-login-field' id='login_field' />
+[2] (500,380)<label >Password />
+[3] (500,419)<input class='form-control form-control js-password-field' id='password' />
+[4] (554,380)<a class='label-link position-absolute top-0 right-0' href='/password_reset' id='forgot-password'>Forgot password? />
+[5] (500,483)<input class='btn btn-primary btn-block js-sign-in-button' />
+or
+[6] (500,598)<button class='Button--secondary Button--medium Button Button--fullWidth mt-2 tmp-mt-2' />
+	[7] (500,598)<span  />
+		[8] (505,598)<span >Continue with Google />
+[9] (500,653)<button class='Button--secondary Button--medium Button Button--fullWidth mt-2 tmp-mt-2' />
+	[10] (500,653)<span  />
+		[11] (505,653)<span >Continue with Apple />
+New to GitHub?
+[12] (523,710)<a href='/join?return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DIv1.558507eb9b186639%26redirect_uri%3Dhttps%253A%252F%252Fdashboard.render.com%252Foauth%252Fgithub%26state%3D05ae1685-2506-4212-8db7-c6366dd10877&source=oauth'>Create an account />
+[13] (500,752)<button class='Button--link Button--medium Button' />
+	[14] (500,752)<span  />
+		[15] (500,752)<span >Sign in with a passkey />
+[16] (351,971)<a class='Link--secondary Link' href='https://docs.github.com/site-policy/github-terms/github-terms-of-service'>Terms />
+[17] (381,971)<a class='Link--secondary Link' href='https://docs.github.com/site-policy/privacy-policies/github-privacy-statement'>Privacy />
+[18] (409,971)<a class='Link--secondary Link' href='https://docs.github.com'>Docs />
+[19] (458,971)<a class='Link--secondary Link' href='https://support.github.com'>Contact GitHub Support />
+[20] (523,972)<button class='Link--secondary underline-on-hover border-0 p-0 color-bg-transparent'>Manage cookies />
+[21] (608,972)<button class='Link--secondary underline-on-hover border-0 p-0 color-bg-transparent text-left'>Do not share my personal information />
