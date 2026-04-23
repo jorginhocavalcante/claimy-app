@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAIMY | Termos de Uso e Política de Privacidade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030507;
+            --accent: #00f2ff;
+            --card: #0c0f14;
+            --text: #ffffff;
+            --text-dim: #8e99a8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem 5%;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo { font-weight: 800; font-size: 1.5rem; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 10px;}
+        .logo span { color: var(--accent); }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        h1 { font-size: 2rem; margin-bottom: 10px; }
+        .last-update { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 30px; }
+
+        h2 { font-size: 1.3rem; color: var(--accent); margin-top: 30px; margin-bottom: 15px; }
+        
+        p, li { color: var(--text-dim); margin-bottom: 15px; font-size: 1rem; }
+        ul { margin-left: 20px; margin-bottom: 15px; }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--text);
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover { background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="Claimy_Landing.html" class="logo">CLAIM<span>Y</span></a>
+    </header>
+
+    <div class="content">
+        <h1>Termos de Uso e Política de Privacidade</h1>
+        <p class="last-update">Última atualização: Abril de 2026</p>
+
+        <h2>1. Aceitação dos Termos</h2>
+        <p>Ao utilizar os serviços da plataforma CLAIMY ("Plataforma"), o usuário concorda expressamente com os presentes Termos de Uso. Caso não concorde com qualquer disposição, o usuário não deverá utilizar a plataforma.</p>
+
+        <h2>2. Serviços Oferecidos</h2>
+        <p>A CLAIMY atua como uma ferramenta tecnológica (Legal-Tech) de intermediação e análise de dados. Oferecemos uma infraestrutura de inteligência artificial desenhada para:</p>
+        <ul>
+            <li>Efetuar varreduras (mediante consentimento via token OAuth) em contas de e-mail e outras bases de dados.</li>
+            <li>Identificar possíveis passivos financeiros (cobranças indevidas, problemas aéreos, quebras contratuais).</li>
+            <li>Conectar o usuário ao nosso corpo jurídico parceiro para eventual propositura de ação de indenização (Modelo "Success Fee").</li>
+        </ul>
+
+        <h2>3. Da Coleta de Dados (LGPD)</h2>
+        <p>Em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018), informamos que:</p>
+        <ul>
+            <li>O acesso ao e-mail do usuário é realizado de forma sistêmica, restrita (modo "readonly" - apenas leitura) e temporária, exclusivamente para cruzamento de palavras-chave.</li>
+            <li>Nenhum ser humano (funcionário ou terceirizado) tem acesso às caixas de entrada ou senhas dos usuários.</li>
+            <li>Os dados pessoais e comprovantes extraídos são utilizados unicamente para a montagem de eventual petição inicial, sendo eliminados de nossas bases caso o cliente opte por não seguir com a causa.</li>
+        </ul>
+
+        <h2>4. Custos e Remuneração (Success Fee)</h2>
+        <p>A utilização da plataforma de varredura é totalmente gratuita. Não há cobrança de mensalidades ou taxas de adesão. A CLAIMY e seus advogados parceiros são remunerados exclusivamente pela modalidade de <strong>Taxa de Êxito (Success Fee) de 30%</strong> sobre o valor efetivamente recebido pelo usuário ao final do processo (acordo ou condenação judicial).</p>
+
+        <h2>5. Isenção de Garantias</h2>
+        <p>A varredura algorítmica não constitui garantia absoluta de existência de direito indenizatório. Todo caso sinalizado pela IA passará por uma revisão humana por advogado legalmente habilitado pela OAB, o qual deterá a palavra final sobre a viabilidade jurídica da demanda.</p>
+
+        <a href="Claimy_Landing.html" class="btn-back">← Voltar para a Home</a>
+    </div>
+
+</body>
+</html>
