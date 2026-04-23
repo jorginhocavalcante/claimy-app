@@ -131,48 +131,25 @@
 
     <div class="main-content">
         <div class="claims-list" id="claims-list-container">
-            <h2 style="margin-bottom: 2rem;">Pedidos em Aberto</h2>
-            
-            <div class="claim-item">
-                <div class="claim-info">
-                    <h4 style="color: var(--accent);">Voo Atrasado: TAP Portugal</h4>
-                    <p>Cliente: Carlos Eduardo | Indenização Est.: R$ 8.000</p>
-                </div>
-                <button class="btn-gold">Mandar p/ Advogada</button>
-            </div>
-
-            <div class="claim-item">
-                <div class="claim-info">
-                    <h4 style="color: var(--accent);">Vazamento: Banco Digital X</h4>
-                    <p>Cliente: Maria Souza | Indenização Est.: R$ 3.000</p>
-                </div>
-                <button class="btn-gold">Mandar p/ Advogada</button>
-            </div>
-
-            <div class="claim-item">
-                <div class="claim-info">
-                    <h4 style="color: var(--accent);">Tarifa Indevida: Banco Y</h4>
-                    <p>Cliente: João Paulo | Indenização Est.: R$ 1.200</p>
-                </div>
-                <button class="btn-gold">Mandar p/ Advogada</button>
-            </div>
+            <h2 style="margin-bottom: 2rem;">Pedidos em Aberto (Seus Clientes)</h2>
+            <!-- Os casos dos clientes injetados pelo JS entram aqui -->
         </div>
 
         <div class="sidebar">
             <div class="vip-card">
-                <h3 style="color: var(--gold); margin-bottom: 10px;">Hunter Engine v1.0</h3>
-                <p style="font-size: 0.85rem; color: var(--text-dim);">A IA está escaneando agora 4.321 conexões ativas em busca de direitos.</p>
+                <h3 style="color: var(--gold); margin-bottom: 10px;">Hunter Engine v2.0</h3>
+                <p style="font-size: 0.85rem; color: var(--text-dim);">A IA está escaneando a caixa de entrada dos seus clientes ativos em busca de violações.</p>
             </div>
 
             <div class="stat-card" style="padding: 1.5rem;">
-                <h3>Status Jurídico (Irmã)</h3>
+                <h3>Status Jurídico (Backoffice)</h3>
                 <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem;">
                     <div style="display: flex; justify-content: space-between;">
                         <span>Aguardando Assinatura</span>
                         <span style="color: var(--gold);">08</span>
                     </div>
                     <div style="display: flex; justify-content: space-between;">
-                        <span>Protocolados</span>
+                        <span>Protocolados no TJ</span>
                         <span style="color: var(--success);">142</span>
                     </div>
                 </div>
@@ -180,13 +157,65 @@
         </div>
     </div>
 
+    <!-- NOVA SEÇÃO: CLAIMY RADAR (CAPTAÇÃO ATIVA) -->
+    <div style="margin-top: 3rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+            <div>
+                <h2 style="display: flex; align-items: center; gap: 10px;">
+                    <span style="display: inline-block; width: 12px; height: 12px; background: #ff3366; border-radius: 50%; box-shadow: 0 0 10px #ff3366; animation: pulse 1.5s infinite;"></span>
+                    Claimy Radar <span style="font-size: 0.5em; background: rgba(255,51,102,0.2); color: #ff3366; padding: 3px 8px; border-radius: 10px; vertical-align: middle;">AO VIVO</span>
+                </h2>
+                <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 5px;">Monitoramento global de voos para Hyper-Segmentação de Tráfego</p>
+            </div>
+            <button class="btn-gold" style="background: transparent; border: 1px solid var(--accent); color: var(--accent);">⚙️ Configurar API de Voos</button>
+        </div>
+
+        <div style="background: var(--card); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.02); color: var(--text-dim); font-size: 0.85rem; text-transform: uppercase;">
+                        <th style="padding: 1.5rem;">Voo / Cia</th>
+                        <th style="padding: 1.5rem;">Rota</th>
+                        <th style="padding: 1.5rem;">Status Atual</th>
+                        <th style="padding: 1.5rem;">Potencial (10 passags.)</th>
+                        <th style="padding: 1.5rem; text-align: center;">Ação de Captura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-top: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 1.5rem; font-weight: 600;">G3 1520 <br><span style="font-size: 0.8rem; color: var(--text-dim); font-weight: 400;">GOL Linhas Aéreas</span></td>
+                        <td style="padding: 1.5rem;">GRU (Guarulhos) ➔ REC<br><span style="font-size: 0.8rem; color: var(--text-dim);">Partida: 14:00</span></td>
+                        <td style="padding: 1.5rem;"><span style="color: #ff3366; background: rgba(255,51,102,0.1); padding: 5px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">CANCELADO</span></td>
+                        <td style="padding: 1.5rem; color: var(--gold); font-weight: 600;">R$ 80.000,00</td>
+                        <td style="padding: 1.5rem; text-align: center;"><button class="btn-gold" style="background: var(--accent); color: #000; font-size: 0.8rem; padding: 8px 15px;">Lançar Ads (Raio 2km)</button></td>
+                    </tr>
+                    <tr style="border-top: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 1.5rem; font-weight: 600;">LA 3030 <br><span style="font-size: 0.8rem; color: var(--text-dim); font-weight: 400;">LATAM Airlines</span></td>
+                        <td style="padding: 1.5rem;">CGH (Congonhas) ➔ SDU<br><span style="font-size: 0.8rem; color: var(--text-dim);">Partida: 15:30</span></td>
+                        <td style="padding: 1.5rem;"><span style="color: #FFC107; background: rgba(255,193,7,0.1); padding: 5px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">ATRASO > 5H</span></td>
+                        <td style="padding: 1.5rem; color: var(--gold); font-weight: 600;">R$ 50.000,00</td>
+                        <td style="padding: 1.5rem; text-align: center;"><button class="btn-gold" style="background: var(--accent); color: #000; font-size: 0.8rem; padding: 8px 15px;">Lançar Ads (Raio 2km)</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <style>
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 51, 102, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); }
+        }
+    </style>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const results = JSON.parse(localStorage.getItem('claimy_results'));
             const userEmail = localStorage.getItem('claimy_user_email');
             const listContainer = document.getElementById('claims-list-container');
 
-            listContainer.innerHTML = '<h2 style="margin-bottom: 2rem;">Pedidos em Aberto</h2>';
+            listContainer.innerHTML = '<h2 style="margin-bottom: 2rem;">Pedidos em Aberto (Seus Clientes)</h2>';
 
             if (results && results.cases && results.cases.length > 0) {
                 // Atualiza as métricas principais
@@ -226,9 +255,9 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         <polyline points="11 8 11 12 14 15"></polyline>
                     </svg>
-                    <h3 style="color: white; margin-bottom: 10px;">Nenhum direito violado detectado</h3>
-                    <p>A Hunter Engine analisou a sua caixa de entrada, mas não encontrou voos cancelados ou tarifas abusivas recentes.</p>
-                    <p style="margin-top: 15px; font-size: 0.85rem; color: var(--accent);">Fique tranquilo, nossa IA continuará monitorando em piloto automático.</p>
+                    <h3 style="color: white; margin-bottom: 10px;">Nenhuma violação no e-mail atual</h3>
+                    <p>A Hunter Engine analisou a caixa de entrada que você conectou, mas não encontrou passivos.</p>
+                    <p style="margin-top: 15px; font-size: 0.85rem; color: var(--accent);">Mande o link do site para seus clientes se cadastrarem, ou use o Radar abaixo para captar novos clientes!</p>
                 `;
                 listContainer.appendChild(emptyState);
             }
