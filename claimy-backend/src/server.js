@@ -197,29 +197,25 @@ fastify.get('/v1/admin/clients', async (request, reply) => {
   }
 });
 
-// --- SOCIAL LISTENING (MULTICANAL COM INTEGRAÇÃO REAL API X) ---
+// --- SOCIAL LISTENING (MULTICANAL COM INTEGRAÇÃO REAL API X E THREADS) ---
 fastify.get('/v1/social-leads', async (request, reply) => {
   try {
-    // Tenta buscar na API Real do X (Twitter) se houver credenciais
+    let realLeads = [];
+
+    // 1. Tenta buscar na API Real do X (Twitter) se houver credenciais
     if (process.env.TWITTER_CLIENT_ID && process.env.TWITTER_CLIENT_SECRET) {
       console.log("🔍 Iniciando busca real na API do X (Twitter)...");
-      // Autenticação OAuth2.0 Client Credentials Flow
       const credentials = Buffer.from(`${process.env.TWITTER_CLIENT_ID}:${process.env.TWITTER_CLIENT_SECRET}`).toString('base64');
       
       const authResponse = await fetch('https://api.twitter.com/oauth2/token', {
         method: 'POST',
-        headers: {
-          'Authorization': `Basic ${credentials}`,
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-        },
+        headers: { 'Authorization': `Basic ${credentials}`, 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
         body: 'grant_type=client_credentials'
       });
       
       if (authResponse.ok) {
         const authData = await authResponse.json();
         const bearerToken = authData.access_token;
-
-        // Busca tweets recentes com termos jurídicos/reclamações das maiores ofensoras
         const query = '(cancelado OR atraso OR extravio OR abusiva OR "venda casada" OR juros) (GOL OR LATAM OR Nubank OR Itaú OR Claro OR Vivo) -is:retweet';
         const searchResponse = await fetch(`https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(query)}&tweet.fields=created_at,author_id&max_results=10`, {
           headers: { 'Authorization': `Bearer ${bearerToken}` }
@@ -228,8 +224,7 @@ fastify.get('/v1/social-leads', async (request, reply) => {
         if (searchResponse.ok) {
           const searchData = await searchResponse.json();
           if (searchData.data && searchData.data.length > 0) {
-            const realLeads = searchData.data.map(tweet => {
-              // IA Simples para classificação do Lead Real
+            const twitterLeads = searchData.data.map(tweet => {
               let type = "Reclamação Geral";
               let textLower = tweet.text.toLowerCase();
               if (textLower.includes('atraso') || textLower.includes('cancelado')) type = "Atraso/Cancelamento Voo";
@@ -245,36 +240,70 @@ fastify.get('/v1/social-leads', async (request, reply) => {
               if (textLower.includes('claro')) target = "Claro";
               if (textLower.includes('vivo')) target = "Vivo";
 
-              // Formatação de Tempo Relativo real (simplificada)
-              const tweetDate = new Date(tweet.created_at);
-              const now = new Date();
-              const diffMins = Math.floor((now - tweetDate) / 60000);
+              const diffMins = Math.floor((new Date() - new Date(tweet.created_at)) / 60000);
               const timeDisplay = diffMins < 60 ? `Há ${diffMins} min` : `Há ${Math.floor(diffMins/60)}h`;
 
-              return {
-                usuario: `ID: ${tweet.author_id}`,
-                rede: 'X (Twitter)',
-                tempo: timeDisplay,
-                texto: tweet.text,
-                tipo: type,
-                alvo: target
-              };
+              return { usuario: `ID: ${tweet.author_id}`, rede: 'X (Twitter)', tempo: timeDisplay, texto: tweet.text, tipo: type, alvo: target };
             });
-            console.log(`✅ ${realLeads.length} leads reais capturados da API do X!`);
-            return { success: true, leads: realLeads };
+            console.log(`✅ ${twitterLeads.length} leads reais capturados da API do X!`);
+            realLeads = realLeads.concat(twitterLeads);
           }
-        } else {
-           console.error("⚠️ Erro ao buscar tweets na API:", await searchResponse.text());
+        } else { console.error("⚠️ Erro ao buscar tweets na API:", await searchResponse.text()); }
+      } else { console.error("⚠️ Erro na autenticação do Twitter:", await authResponse.text()); }
+    }
+
+    // 2. Tenta buscar na API Real do Threads (Meta Graph API) se houver credencial
+    if (process.env.THREADS_ACCESS_TOKEN) {
+      console.log("🔍 Iniciando busca real na API do Threads (Meta)...");
+      const queryThreads = 'cancelado OR atraso OR extravio OR abusiva OR "venda casada" OR juros';
+      
+      const threadsResponse = await fetch(`https://graph.threads.net/v1.0/media/search?q=${encodeURIComponent(queryThreads)}&access_token=${process.env.THREADS_ACCESS_TOKEN}`);
+      
+      if (threadsResponse.ok) {
+        const threadsData = await threadsResponse.json();
+        if (threadsData.data && threadsData.data.length > 0) {
+          const leadsThreads = threadsData.data.map(post => {
+            let type = "Reclamação Geral";
+            let textLower = (post.text || "").toLowerCase();
+            if (textLower.includes('atraso') || textLower.includes('cancelado')) type = "Atraso/Cancelamento Voo";
+            if (textLower.includes('mala') || textLower.includes('extravio')) type = "Bagagem Extraviada";
+            if (textLower.includes('cesta') || textLower.includes('juros')) type = "Taxa Abusiva Bancária";
+            
+            let target = "Empresa";
+            if (textLower.includes('gol')) target = "GOL";
+            if (textLower.includes('latam')) target = "LATAM";
+            if (textLower.includes('nubank')) target = "Nubank";
+            if (textLower.includes('claro')) target = "Claro";
+
+            return {
+              usuario: `ID: ${post.owner?.id || 'User'}`,
+              rede: 'Threads',
+              tempo: new Date(post.timestamp).toLocaleDateString(),
+              texto: post.text,
+              tipo: type,
+              alvo: target
+            };
+          });
+          console.log(`✅ ${leadsThreads.length} leads reais capturados da API do Threads!`);
+          realLeads = realLeads.concat(leadsThreads);
         }
       } else {
-         console.error("⚠️ Erro na autenticação do Twitter (Verifique Client ID/Secret):", await authResponse.text());
+        console.error("⚠️ Erro ao buscar posts na API Threads:", await threadsResponse.text());
       }
     }
+
+    // Retorna os leads se qualquer uma das APIs funcionar
+    if (realLeads.length > 0) {
+      // Embaralha para ficar visualmente dinâmico no Dashboard (Misturar X com Threads)
+      realLeads = realLeads.sort(() => Math.random() - 0.5);
+      return { success: true, leads: realLeads };
+    }
+
   } catch (error) {
-    console.error("❌ Falha crítica na integração com X (Twitter):", error.message);
+    console.error("❌ Falha crítica nas integrações de Social Listening:", error.message);
   }
 
-  // FALLBACK DE SEGURANÇA: Retorna leads simulados se a API falhar, bater Rate Limit, ou não houver credencial
+  // FALLBACK DE SEGURANÇA: Retorna leads simulados se as APIs falharem, baterem Rate Limit, ou não houver credencial
   console.log("🔄 Redirecionando para o motor de Simulação (Fallback)...");
   const nomes = ['@lucas_dev', '@mariana_silva', '@joao.pedro99', '@ana_clara', '@carlos_m', '@bruno_oficial', '@fernanda.adv'];
   const networks = ['X (Twitter)', 'Threads', 'Instagram', 'Facebook', 'Reclame Aqui'];
