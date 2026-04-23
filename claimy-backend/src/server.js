@@ -67,10 +67,43 @@ const hunterEngine = (emailText) => {
   return { found: findings.length > 0, total_estimate: totalEstimate, cases: findings };
 };
 
-// Rota de Varredura com Persistência
+// Rota de Varredura com Persistência e Integração Gmail API
 fastify.post('/v1/scan', async (request, reply) => {
-  const { email, textContent } = request.body;
-  const results = hunterEngine(textContent || "");
+  const { email, textContent, google_access_token } = request.body;
+  
+  let textToAnalyze = textContent || "";
+
+  // Se recebermos um token do Google, acionamos a leitura real da Caixa de Entrada!
+  if (google_access_token) {
+    console.log(`🔍 Iniciando varredura real no Gmail para: ${email}`);
+    try {
+      // 1. Busca lista de e-mails que contenham nossas palavras de alerta
+      const query = "cancelado OR atraso OR tarifa OR bagagem OR multa OR reajuste";
+      const listResponse = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=10&q=${encodeURIComponent(query)}`, {
+        headers: { Authorization: `Bearer ${google_access_token}` }
+      });
+      const listData = await listResponse.json();
+
+      if (listData.messages && listData.messages.length > 0) {
+        // 2. Para cada e-mail encontrado, extrai o texto (snippet)
+        for (const msg of listData.messages) {
+          const msgResponse = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}`, {
+            headers: { Authorization: `Bearer ${google_access_token}` }
+          });
+          const msgData = await msgResponse.json();
+          textToAnalyze += " " + (msgData.snippet || "");
+        }
+        console.log("✅ Textos extraídos do Gmail com sucesso.");
+      } else {
+        console.log("Nenhum e-mail suspeito encontrado nesta varredura.");
+      }
+    } catch (err) {
+      console.error("❌ Erro ao ler Gmail API:", err.message);
+    }
+  }
+
+  // Passa todo o texto coletado (ou enviado) para o "Cérebro"
+  const results = hunterEngine(textToAnalyze);
   
   // Salvar no Banco de Dados se houver achados
   if (results.found) {
@@ -84,7 +117,7 @@ fastify.post('/v1/scan', async (request, reply) => {
         );
       }
     } catch (err) {
-      console.error('Erro ao salvar achados:', err.message);
+      console.error('Erro ao salvar achados no Banco:', err.message);
     } finally {
       await client.end();
     }
