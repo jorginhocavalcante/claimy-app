@@ -188,12 +188,53 @@
         </div>
     </div>
 
+    <!-- NOVO: CAÇADOR SOCIAL -->
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 5% 4rem 5%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h2>Caçador Social (Twitter & Threads) <span style="font-size: 0.8rem; background: var(--accent); color: black; padding: 2px 8px; border-radius: 10px; margin-left: 10px; font-weight: 800;">LIVE</span></h2>
+                <p style="color: var(--text-dim); margin-top: 5px;">Monitoramento em tempo real de reclamações e clientes em potencial.</p>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: #1DA1F2; font-weight: 600;"><span class="dot active" style="background: #1DA1F2; width: 8px; height: 8px; border-radius: 50%;"></span> API Twitter</span>
+                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: white; font-weight: 600;"><span class="dot active" style="background: white; width: 8px; height: 8px; border-radius: 50%;"></span> API Threads</span>
+            </div>
+        </div>
+
+        <div style="background: var(--card); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.02); color: var(--text-dim); font-size: 0.85rem; text-transform: uppercase;">
+                        <th style="padding: 1.5rem; width: 15%;">Usuário / Rede</th>
+                        <th style="padding: 1.5rem; width: 50%;">Reclamação Capturada</th>
+                        <th style="padding: 1.5rem; width: 15%;">Alvo / Tipo</th>
+                        <th style="padding: 1.5rem; text-align: center; width: 20%;">Ação de Venda</th>
+                    </tr>
+                </thead>
+                <tbody id="social-tbody">
+                    <tr><td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-dim);">Lendo milhões de publicações... <span class="loading-spinner"></span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <style>
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 51, 102, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); }
         }
+        .loading-spinner {
+            display: inline-block;
+            width: 12px; height: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 
     <script>
@@ -290,9 +331,42 @@
                 }
             }
 
-            // Carrega na hora e fica atualizando a cada 15 segundos
+            // LÓGICA DO CAÇADOR SOCIAL
+            async function loadSocialLeads() {
+                const tbody = document.getElementById('social-tbody');
+                try {
+                    const res = await fetch('https://claimy-app.onrender.com/v1/social-leads');
+                    const data = await res.json();
+                    
+                    if (data.leads && data.leads.length > 0) {
+                        tbody.innerHTML = '';
+                        data.leads.forEach(l => {
+                            const tr = document.createElement('tr');
+                            tr.style.borderTop = '1px solid rgba(255,255,255,0.05)';
+                            
+                            const networkColor = l.rede === 'Twitter' ? '#1DA1F2' : '#ffffff';
+
+                            tr.innerHTML = `
+                                <td style="padding: 1.5rem; font-weight: 600; color: ${networkColor};">${l.usuario} <br><span style="font-size: 0.75rem; color: var(--text-dim); font-weight: 400;">${l.rede} • ${l.tempo}</span></td>
+                                <td style="padding: 1.5rem; font-size: 0.95rem; line-height: 1.4;">"${l.texto}"</td>
+                                <td style="padding: 1.5rem;"><span style="color: var(--accent); background: rgba(0, 242, 255, 0.1); padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">${l.alvo}</span><br><span style="font-size: 0.75rem; color: var(--text-dim); display: inline-block; margin-top: 5px;">${l.tipo}</span></td>
+                                <td style="padding: 1.5rem; text-align: center;"><button class="btn-gold" style="background: transparent; border: 1px solid var(--accent); color: var(--accent); font-size: 0.8rem; padding: 8px 15px;" onclick="alert('Isso enviaria uma Mensagem Direta (DM) oferecendo a avaliação grátis da Claimy para ${l.usuario}!')">Abordar no Direct</button></td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+                } catch (err) {
+                    console.error("Social Leads Error:", err);
+                }
+            }
+
+            // Carrega na hora e fica atualizando
             loadRadar();
-            setInterval(loadRadar, 15000);
+            loadSocialLeads();
+            setInterval(loadRadar, 15000); // 15 seg
+            setInterval(loadSocialLeads, 20000); // 20 seg
+        });
+    </script>
         });
     </script>
 </body>
