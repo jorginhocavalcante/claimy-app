@@ -198,53 +198,65 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // LÓGICA DO PAINEL PRINCIPAL
-            const results = JSON.parse(localStorage.getItem('claimy_results'));
-            const userEmail = localStorage.getItem('claimy_user_email');
+            // LÓGICA DO PAINEL PRINCIPAL (VISÃO ADMIN / ADVOGADA)
             const listContainer = document.getElementById('claims-list-container');
+            listContainer.innerHTML = '<h2 style="margin-bottom: 2rem;">Clientes Prontos p/ Protocolo Judicial</h2>';
 
-            listContainer.innerHTML = '<h2 style="margin-bottom: 2rem;">Pedidos em Aberto (Seus Clientes)</h2>';
+            async function carregarClientesAdmin() {
+                try {
+                    const res = await fetch('https://claimy-app.onrender.com/v1/admin/clients');
+                    const data = await res.json();
+                    
+                    if (data.clients && data.clients.length > 0) {
+                        // Calcula estimativas (Assumindo média de R$ 10k por processo, lucro de 30%)
+                        const totalProcessos = data.clients.length;
+                        const lucroEstimado = totalProcessos * 10000 * 0.3; 
+                        
+                        document.getElementById('total-recuperado').innerText = `${totalProcessos} Ações`;
+                        document.getElementById('meu-lucro').innerText = `R$ ${lucroEstimado.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-            if (results && results.cases && results.cases.length > 0) {
-                document.getElementById('total-recuperado').innerText = `R$ ${results.total_estimate.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-                const meuLucro = results.total_estimate * 0.30;
-                document.getElementById('meu-lucro').innerText = `R$ ${meuLucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-
-                results.cases.forEach(c => {
-                    const item = document.createElement('div');
-                    item.className = 'claim-item';
-                    item.innerHTML = `
-                        <div class="claim-info">
-                            <h4 style="color: var(--accent);">${c.desc}</h4>
-                            <p>${userEmail || 'Cliente'} • Verificado via Hunter Engine</p>
-                        </div>
-                        <div class="claim-status" style="text-align: right;">
-                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--gold);">R$ ${c.value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                            <button class="btn-gold" style="margin-top:10px; font-size: 0.8rem; padding: 5px 10px;">Enviar p/ Jurídico</button>
-                        </div>
+                        data.clients.forEach(c => {
+                            const item = document.createElement('div');
+                            item.className = 'claim-item';
+                            item.innerHTML = `
+                                <div class="claim-info">
+                                    <h4 style="color: var(--accent);">${c.nome}</h4>
+                                    <p style="margin-top: 3px;">CPF: ${c.cpf} • Conta: ${c.banco} (${c.agencia}/${c.conta})</p>
+                                    <p style="font-size: 0.8rem; margin-top: 5px; color: var(--text-dim);">${c.rua}, ${c.numero} - ${c.cidade_uf}</p>
+                                </div>
+                                <div class="claim-status" style="text-align: right;">
+                                    <div style="font-size: 0.9rem; font-weight: bold; color: var(--success); margin-bottom: 5px;">✅ Procuração Assinada</div>
+                                    <button class="btn-gold" style="font-size: 0.8rem; padding: 5px 10px;" onclick="alert('Baixando ZIP com Procuração assinada e RG de ${c.nome}...')">Gerar Petição + ZIP</button>
+                                </div>
+                            `;
+                            listContainer.appendChild(item);
+                        });
+                    } else {
+                        throw new Error('vazio');
+                    }
+                } catch (err) {
+                    // ESTADO VAZIO
+                    document.getElementById('total-recuperado').innerText = "0 Ações";
+                    document.getElementById('meu-lucro').innerText = "R$ 0,00";
+                    
+                    const emptyState = document.createElement('div');
+                    emptyState.style.padding = "3rem";
+                    emptyState.style.textAlign = "center";
+                    emptyState.style.color = "var(--text-dim)";
+                    emptyState.innerHTML = `
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; opacity: 0.5;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <polyline points="11 8 11 12 14 15"></polyline>
+                        </svg>
+                        <h3 style="color: white; margin-bottom: 10px;">O Cofre de Leads está Vazio</h3>
+                        <p>Ainda não há clientes que preencheram a Esteira Jurídica (KYC).</p>
+                        <p style="margin-top: 15px; font-size: 0.85rem; color: var(--accent);">Use o botão 'Lançar Ads' no Radar abaixo para atrair as primeiras vítimas!</p>
                     `;
-                    listContainer.appendChild(item);
-                });
-            } else {
-                document.getElementById('total-recuperado').innerText = "R$ 0,00";
-                document.getElementById('meu-lucro').innerText = "R$ 0,00";
-                
-                const emptyState = document.createElement('div');
-                emptyState.style.padding = "3rem";
-                emptyState.style.textAlign = "center";
-                emptyState.style.color = "var(--text-dim)";
-                emptyState.innerHTML = `
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; opacity: 0.5;">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        <polyline points="11 8 11 12 14 15"></polyline>
-                    </svg>
-                    <h3 style="color: white; margin-bottom: 10px;">Nenhuma violação no e-mail atual</h3>
-                    <p>A Hunter Engine analisou a caixa de entrada que você conectou, mas não encontrou passivos.</p>
-                    <p style="margin-top: 15px; font-size: 0.85rem; color: var(--accent);">Mande o link do site para seus clientes se cadastrarem, ou use o Radar abaixo para captar novos clientes!</p>
-                `;
-                listContainer.appendChild(emptyState);
+                    listContainer.appendChild(emptyState);
+                }
             }
+            carregarClientesAdmin();
 
             // LÓGICA DO CLAIMY RADAR
             async function loadRadar() {
