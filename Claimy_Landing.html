@@ -299,12 +299,12 @@
                 document.getElementById('status').innerText = "Varredura Concluída!";
                 document.getElementById('fill').style.width = '100%';
                 
-                // Salva no navegador e redireciona para o Dashboard
+                // Salva no navegador e redireciona para a Área do Cliente
                 localStorage.setItem('claimy_results', JSON.stringify(result.data));
                 localStorage.setItem('claimy_user_email', emailInput);
                 
                 setTimeout(() => {
-                    window.location.href = 'Claimy_Dashboard.html';
+                    window.location.href = 'Client_Area.html';
                 }, 1000);
                 
             } catch (error) {

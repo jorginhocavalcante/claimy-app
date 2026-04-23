@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAIMY | Minha Área</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #05070a;
+            --card: #0f1218;
+            --accent: #00f2ff;
+            --gold: #d4af37;
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 2rem 5%;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.5rem; text-decoration: none; color: var(--text); }
+        .logo span { color: var(--accent); }
+
+        .main-container {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .status-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .status-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .highlight-value {
+            color: var(--gold);
+            font-size: 3rem;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            margin: 1rem 0;
+        }
+
+        .case-card {
+            background: linear-gradient(145deg, var(--card), #161a22);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .case-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .case-info h3 {
+            color: var(--accent);
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+
+        .case-info p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .btn-action {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-action:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="Claimy_Landing.html" class="logo">
+            <img src="claimy_logo_premium_1776829501557.png" width="35" style="border-radius: 5px;" alt="Claimy">
+            CLAIM<span>Y</span>
+        </a>
+        <div style="text-align: right;">
+            <p style="font-weight: 600;" id="user-display">Carregando...</p>
+            <p style="font-size: 0.8rem; color: var(--success);">Conta Autenticada</p>
+        </div>
+    </header>
+
+    <div class="main-container" id="main-content">
+        <!-- Injetado via JS -->
+    </div>
+
+    <footer>
+        <p>&copy; 2026 CLAIMY TECHNOLOGIES. <br> Ambiente Seguro e Criptografado.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const results = JSON.parse(localStorage.getItem('claimy_results'));
+            const userEmail = localStorage.getItem('claimy_user_email') || 'Usuário';
+            
+            document.getElementById('user-display').innerText = userEmail;
+            const container = document.getElementById('main-content');
+
+            if (results && results.cases && results.cases.length > 0) {
+                // Estado com Achados
+                let html = `
+                    <div class="status-header">
+                        <h1 style="color: var(--success);">Análise Concluída!</h1>
+                        <p style="color: var(--text-dim); font-size: 1.1rem;">Nossa IA encontrou passivos financeiros no seu histórico.</p>
+                        <div class="highlight-value">R$ ${results.total_estimate.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                        <p style="font-size: 0.9rem; color: var(--text-dim);">Estimativa total de indenizações identificadas.</p>
+                    </div>
+                `;
+
+                results.cases.forEach(c => {
+                    html += `
+                        <div class="case-card">
+                            <div class="case-info">
+                                <h3>${c.desc}</h3>
+                                <p>Identificado com ${(c.confidence * 100).toFixed(0)}% de precisão via Hunter Engine</p>
+                                <p style="margin-top: 10px; font-weight: bold; color: var(--gold);">Potencial: R$ ${c.value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
+                            </div>
+                            <div>
+                                <button class="btn-action" onclick="iniciarRecuperacao()">Recuperar Agora</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            } else {
+                // Estado Vazio (Sem Achados)
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <h2 style="margin-bottom: 15px; font-size: 2rem;">Tudo limpo!</h2>
+                        <p style="color: var(--text-dim); font-size: 1.1rem; line-height: 1.6; max-width: 500px; margin: 0 auto;">
+                            Fizemos uma varredura completa na sua caixa de entrada e não encontramos nenhum voo cancelado recente ou tarifa bancária indevida.
+                        </p>
+                        <p style="margin-top: 30px; font-size: 0.9rem; color: var(--accent); background: rgba(0, 242, 255, 0.1); padding: 15px; border-radius: 10px; display: inline-block;">
+                            O Claimy Guardiado continua monitorando seu e-mail 24/7 no modo silencioso. Se alguma empresa pisar na bola, nós te avisaremos na mesma hora!
+                        </p>
+                    </div>
+                `;
+            }
+        });
+
+        function iniciarRecuperacao() {
+            // Este é o gancho para o Passo 2 (Funil KYC)
+            alert("Iniciando Funil de Procuração Digital... (Em breve!)");
+        }
+    </script>
+</body>
+</html>
