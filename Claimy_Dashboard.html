@@ -192,12 +192,15 @@
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 5% 4rem 5%;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
             <div>
-                <h2>Caçador Social (Twitter & Threads) <span style="font-size: 0.8rem; background: var(--accent); color: black; padding: 2px 8px; border-radius: 10px; margin-left: 10px; font-weight: 800;">LIVE</span></h2>
-                <p style="color: var(--text-dim); margin-top: 5px;">Monitoramento em tempo real de reclamações e clientes em potencial.</p>
+                <h2>Caçador Social (Omnichannel) <span style="font-size: 0.8rem; background: var(--accent); color: black; padding: 2px 8px; border-radius: 10px; margin-left: 10px; font-weight: 800;">LIVE</span></h2>
+                <p style="color: var(--text-dim); margin-top: 5px;">Monitoramento em tempo real de redes sociais e portais de reclamação.</p>
             </div>
-            <div style="display: flex; gap: 15px;">
-                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: #1DA1F2; font-weight: 600;"><span class="dot active" style="background: #1DA1F2; width: 8px; height: 8px; border-radius: 50%;"></span> API Twitter</span>
-                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: white; font-weight: 600;"><span class="dot active" style="background: white; width: 8px; height: 8px; border-radius: 50%;"></span> API Threads</span>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap; max-width: 40%;">
+                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: #1DA1F2; font-weight: 600;"><span class="dot active" style="background: #1DA1F2; width: 8px; height: 8px; border-radius: 50%;"></span> Twitter</span>
+                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: white; font-weight: 600;"><span class="dot active" style="background: white; width: 8px; height: 8px; border-radius: 50%;"></span> Threads</span>
+                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: #E1306C; font-weight: 600;"><span class="dot active" style="background: #E1306C; width: 8px; height: 8px; border-radius: 50%;"></span> Instagram</span>
+                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: #4267B2; font-weight: 600;"><span class="dot active" style="background: #4267B2; width: 8px; height: 8px; border-radius: 50%;"></span> Facebook</span>
+                <span style="display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: #34A853; font-weight: 600;"><span class="dot active" style="background: #34A853; width: 8px; height: 8px; border-radius: 50%;"></span> Reclame Aqui</span>
             </div>
         </div>
 
@@ -344,7 +347,11 @@
                             const tr = document.createElement('tr');
                             tr.style.borderTop = '1px solid rgba(255,255,255,0.05)';
                             
-                            const networkColor = l.rede === 'Twitter' ? '#1DA1F2' : '#ffffff';
+                            let networkColor = '#ffffff';
+                            if (l.rede === 'Twitter') networkColor = '#1DA1F2';
+                            else if (l.rede === 'Instagram') networkColor = '#E1306C';
+                            else if (l.rede === 'Facebook') networkColor = '#4267B2';
+                            else if (l.rede === 'Reclame Aqui') networkColor = '#34A853';
 
                             tr.innerHTML = `
                                 <td style="padding: 1.5rem; font-weight: 600; color: ${networkColor};">${l.usuario} <br><span style="font-size: 0.75rem; color: var(--text-dim); font-weight: 400;">${l.rede} • ${l.tempo}</span></td>
