@@ -184,34 +184,53 @@
         document.addEventListener('DOMContentLoaded', () => {
             const results = JSON.parse(localStorage.getItem('claimy_results'));
             const userEmail = localStorage.getItem('claimy_user_email');
+            const listContainer = document.getElementById('claims-list-container');
 
-            if (results && results.cases) {
+            listContainer.innerHTML = '<h2 style="margin-bottom: 2rem;">Pedidos em Aberto</h2>';
+
+            if (results && results.cases && results.cases.length > 0) {
                 // Atualiza as métricas principais
                 document.getElementById('total-recuperado').innerText = `R$ ${results.total_estimate.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
                 
                 const meuLucro = results.total_estimate * 0.30;
                 document.getElementById('meu-lucro').innerText = `R$ ${meuLucro.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-                // Limpa e popula a lista de casos
-                const listContainer = document.getElementById('claims-list-container');
-                listContainer.innerHTML = ''; // Limpa os fixos
-
+                // Popula a lista de casos
                 results.cases.forEach(c => {
                     const item = document.createElement('div');
                     item.className = 'claim-item';
                     item.innerHTML = `
                         <div class="claim-info">
-                            <div class="status-pill status-found">${c.type}</div>
-                            <h4>${c.desc}</h4>
-                            <p>${userEmail} • Verificado via Hunter Engine</p>
+                            <h4 style="color: var(--accent);">${c.desc}</h4>
+                            <p>${userEmail || 'Cliente'} • Verificado via Hunter Engine</p>
                         </div>
-                        <div class="claim-status">
-                            <div class="claim-amount">R$ ${c.value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                            <button class="btn-gold" style="margin-top:10px">Enviar para Jurídico</button>
+                        <div class="claim-status" style="text-align: right;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--gold);">R$ ${c.value.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                            <button class="btn-gold" style="margin-top:10px; font-size: 0.8rem; padding: 5px 10px;">Enviar p/ Jurídico</button>
                         </div>
                     `;
                     listContainer.appendChild(item);
                 });
+            } else {
+                // ESTADO VAZIO (Nenhum caso encontrado)
+                document.getElementById('total-recuperado').innerText = "R$ 0,00";
+                document.getElementById('meu-lucro').innerText = "R$ 0,00";
+                
+                const emptyState = document.createElement('div');
+                emptyState.style.padding = "3rem";
+                emptyState.style.textAlign = "center";
+                emptyState.style.color = "var(--text-dim)";
+                emptyState.innerHTML = `
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 1rem; opacity: 0.5;">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <polyline points="11 8 11 12 14 15"></polyline>
+                    </svg>
+                    <h3 style="color: white; margin-bottom: 10px;">Nenhum direito violado detectado</h3>
+                    <p>A Hunter Engine analisou a sua caixa de entrada, mas não encontrou voos cancelados ou tarifas abusivas recentes.</p>
+                    <p style="margin-top: 15px; font-size: 0.85rem; color: var(--accent);">Fique tranquilo, nossa IA continuará monitorando em piloto automático.</p>
+                `;
+                listContainer.appendChild(emptyState);
             }
         });
     </script>
