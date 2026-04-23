@@ -7,10 +7,6 @@ fastify.register(require('@fastify/cors'), {
   methods: ['GET', 'POST']
 });
 
-// Health Check
-fastify.get('/status', async (request, reply) => {
-  return { status: 'CLAIMY_ONLINE', version: '1.1.0' };
-});
 
 const { Client } = require('pg');
 
