@@ -257,10 +257,10 @@
                 
                 <div class="form-group" style="margin-top: 1rem;">
                     <label>Envio de Documento (RG ou CNH)</label>
-                    <div class="file-upload" onclick="document.getElementById('docUpload').click()">
+                    <div class="file-upload" id="upload-box" onclick="document.getElementById('docUpload').click()">
                         📸 Clique aqui para anexar a foto do seu documento.
                     </div>
-                    <input type="file" id="docUpload" style="display: none;" accept="image/*,.pdf">
+                    <input type="file" id="docUpload" style="display: none;" accept="image/*,.pdf" onchange="document.getElementById('upload-box').innerHTML = '✅ ' + this.files[0].name; document.getElementById('upload-box').style.borderColor = 'var(--success)'; document.getElementById('upload-box').style.color = 'white';">
                 </div>
 
                 <button type="button" class="btn-primary" onclick="nextStep(4)">Avançar para Assinatura</button>
