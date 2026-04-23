@@ -296,12 +296,21 @@
                         
                         localStorage.setItem('claimy_user_email', email);
                         
+                        // Sorteia o tipo de indenização para a demonstração (Multicanal)
+                        const cenarios = [
+                            { desc: "Atraso > 4h GOL (GRU-SDU)", value: 8000, confidence: 0.95 },
+                            { desc: "Bagagem Extraviada LATAM (Voo Internacional)", value: 10000, confidence: 0.88 },
+                            { desc: "Cobrança Ilegal 'Cesta de Serviços' Nubank", value: 2450, confidence: 0.99 },
+                            { desc: "Multa de Fidelidade Abusiva Claro", value: 1200, confidence: 0.90 },
+                            { desc: "Juros Abusivos Cartão Itaú (Revisão)", value: 4500, confidence: 0.75 },
+                            { desc: "Negativa de Cirurgia Plano Amil", value: 15000, confidence: 0.98 }
+                        ];
+                        const sorteado = cenarios[Math.floor(Math.random() * cenarios.length)];
+                        
                         const fakeResults = {
                             found: true,
-                            total_estimate: 8000,
-                            cases: [
-                                { desc: "Atraso > 4h GOL (GRU-SDU)", value: 8000, confidence: 0.95 }
-                            ]
+                            total_estimate: sorteado.value,
+                            cases: [ sorteado ]
                         };
                         localStorage.setItem('claimy_results', JSON.stringify(fakeResults));
 
