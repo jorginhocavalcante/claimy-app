@@ -197,6 +197,38 @@ fastify.get('/v1/admin/clients', async (request, reply) => {
   }
 });
 
+// --- SOCIAL LISTENING (TWITTER & THREADS) ---
+fastify.get('/v1/social-leads', async (request, reply) => {
+  const nomes = ['@lucas_dev', '@mariana_silva', '@joao.pedro99', '@ana_clara', '@carlos_m'];
+  const networks = ['Twitter', 'Threads'];
+  const problemas = [
+    { text: "Mais de 6 horas preso em Congonhas. Obrigado GOL por estragar minhas férias! 😡", type: "Voo Atrasado", target: "GOL" },
+    { text: "Mala despachada pra Miami e chegou em Paris. Piada a LATAM.", type: "Bagagem Extraviada", target: "LATAM" },
+    { text: "Alguém mais com cobrança 'Cesta de Serviços' no Nubank sem ter pedido nada?", type: "Cobrança Indevida", target: "Nubank" },
+    { text: "Cancelei a internet da Claro faz 2 meses e meu nome foi pro Serasa por causa de multa de fidelidade falsa.", type: "Multa Indevida", target: "Claro" },
+    { text: "Voo cancelado de última hora no Santos Dumont. Ninguém dá uma satisfação. Que descaso!", type: "Voo Cancelado", target: "Azul" }
+  ];
+
+  const generateLead = () => {
+    const p = problemas[Math.floor(Math.random() * problemas.length)];
+    const timeAgo = Math.floor(Math.random() * 15) + 1; // 1 a 15 min atrás
+    return {
+      usuario: nomes[Math.floor(Math.random() * nomes.length)],
+      rede: networks[Math.floor(Math.random() * networks.length)],
+      tempo: `Há ${timeAgo} min`,
+      texto: p.text,
+      tipo: p.type,
+      alvo: p.target
+    };
+  };
+
+  const numLeads = Math.floor(Math.random() * 4) + 2;
+  const leads = [];
+  for(let i=0; i<numLeads; i++) leads.push(generateLead());
+
+  return { success: true, leads };
+});
+
 // Health Check
 fastify.get('/status', async (request, reply) => {
   return { status: 'CLAIMY_ONLINE', version: '2.0.0', db: 'connected' };
