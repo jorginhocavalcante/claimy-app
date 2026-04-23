@@ -126,6 +126,45 @@ fastify.post('/v1/scan', async (request, reply) => {
   return { message: 'Análise de Inteligência Concluída e Salva', data: results };
 });
 
+// --- CLAIMY RADAR (SIMULADOR DE RASTREAMENTO) ---
+fastify.get('/v1/radar', async (request, reply) => {
+  // Simula a busca na API de aviação para os maiores aeroportos do Brasil
+  const airports = ['GRU (Guarulhos)', 'CGH (Congonhas)', 'SDU (Santos Dumont)', 'BSB (Brasília)', 'REC (Recife)'];
+  const airlines = ['GOL Linhas Aéreas', 'LATAM Airlines', 'Azul Linhas Aéreas'];
+  const statuses = ['CANCELADO', 'ATRASO > 4H', 'ATRASO > 5H'];
+  
+  const generateFlight = () => {
+    const cia = airlines[Math.floor(Math.random() * airlines.length)];
+    const prefix = cia.includes('GOL') ? 'G3' : (cia.includes('LATAM') ? 'LA' : 'AD');
+    const num = Math.floor(Math.random() * 8000) + 1000;
+    
+    const origin = airports[Math.floor(Math.random() * airports.length)];
+    let dest = airports[Math.floor(Math.random() * airports.length)];
+    while(dest === origin) dest = airports[Math.floor(Math.random() * airports.length)]; // Garante que destino é diferente
+    
+    const status = statuses[Math.floor(Math.random() * statuses.length)];
+    
+    // Potencial financeiro: Indenização média R$ 5k a 10k x 10 passageiros
+    const potencial = (Math.floor(Math.random() * 5) + 5) * 10000; 
+
+    return {
+      voo: `${prefix} ${num}`,
+      cia: cia,
+      rota: `${origin.split(' ')[0]} ➔ ${dest.split(' ')[0]}`,
+      partida: `Hoje, ${Math.floor(Math.random() * 12) + 8}:00`,
+      status: status,
+      potencial: potencial
+    };
+  };
+
+  // Retorna 3 a 5 voos com problemas
+  const numVôos = Math.floor(Math.random() * 3) + 3;
+  const flights = [];
+  for(let i=0; i<numVôos; i++) flights.push(generateFlight());
+  
+  return { success: true, source: 'claimy_internal_radar', flights };
+});
+
 // Health Check
 fastify.get('/status', async (request, reply) => {
   return { status: 'CLAIMY_ONLINE', version: '2.0.0', db: 'connected' };
