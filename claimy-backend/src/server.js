@@ -28,6 +28,7 @@ const initDB = async () => {
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
       CREATE TABLE IF NOT EXISTS findings (id SERIAL PRIMARY KEY, user_email VARCHAR(255) NOT NULL, type VARCHAR(50), description TEXT, estimate_value DECIMAL(10,2), confidence DECIMAL(3,2), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+      CREATE TABLE IF NOT EXISTS clients (id SERIAL PRIMARY KEY, nome VARCHAR(255), cpf VARCHAR(20), rg VARCHAR(20), orgao_exp VARCHAR(20), estado_civil VARCHAR(50), profissao VARCHAR(100), cep VARCHAR(20), rua VARCHAR(255), numero VARCHAR(20), complemento VARCHAR(100), bairro VARCHAR(100), cidade_uf VARCHAR(100), banco VARCHAR(100), tipo_conta VARCHAR(50), agencia VARCHAR(20), conta VARCHAR(20), aceite BOOLEAN, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
     `);
     console.log('🐘 Banco de Dados CLAIMY Inicializado e Pronto!');
   } catch (err) {
@@ -163,6 +164,41 @@ fastify.get('/v1/radar', async (request, reply) => {
   for(let i=0; i<numVôos; i++) flights.push(generateFlight());
   
   return { success: true, source: 'claimy_internal_radar', flights };
+});
+
+// --- FUNIL JURÍDICO (KYC) ---
+fastify.post('/v1/kyc', async (request, reply) => {
+  const data = request.body;
+  const client = new Client(dbConfig);
+  try {
+    await client.connect();
+    await client.query(
+      `INSERT INTO clients (nome, cpf, rg, orgao_exp, estado_civil, profissao, cep, rua, numero, complemento, bairro, cidade_uf, banco, tipo_conta, agencia, conta, aceite) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+      [data.nome, data.cpf, data.rg, data.orgao_exp, data.estado_civil, data.profissao, data.cep, data.rua, data.numero, data.complemento, data.bairro, data.cidade_uf, data.banco, data.tipo_conta, data.agencia, data.conta, data.aceite]
+    );
+    return { success: true, message: 'Dados salvos com sucesso no cofre da CLAIMY!' };
+  } catch (err) {
+    console.error('Erro ao salvar KYC:', err.message);
+    reply.status(500).send({ error: 'Erro ao salvar os dados.' });
+  } finally {
+    await client.end();
+  }
+});
+
+// --- PAINEL ADMIN ---
+fastify.get('/v1/admin/clients', async (request, reply) => {
+  const client = new Client(dbConfig);
+  try {
+    await client.connect();
+    const result = await client.query('SELECT * FROM clients ORDER BY created_at DESC');
+    return { success: true, clients: result.rows };
+  } catch (err) {
+    console.error('Erro ao buscar clientes:', err.message);
+    reply.status(500).send({ error: 'Erro ao buscar dados.' });
+  } finally {
+    await client.end();
+  }
 });
 
 // Health Check
