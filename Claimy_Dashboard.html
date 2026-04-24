@@ -382,10 +382,22 @@
                     // Atualiza o Status no BD
                     await fetch(`https://claimy-app.onrender.com/v1/social-leads/${id}/action`, { method: 'POST' });
                     
-                    // Abre o link de contato
                     let msg = encodeURIComponent("Olá! Vi sua reclamação recente e a Claimy pode te ajudar a conseguir uma indenização em 24h sem nenhum custo inicial. Quer saber como?");
-                    let link = "https://wa.me/?text=" + msg;
-                    if(rede.includes('Twitter') || rede.includes('X')) link = `https://twitter.com/messages/compose?text=${msg}`;
+                    let userClean = usuario.replace('@', '').replace('ID: ', '');
+                    let link = "https://wa.me/?text=" + msg; // Fallback para WhatsApp
+                    
+                    if(rede.includes('Twitter') || rede.includes('X')) {
+                        link = `https://twitter.com/messages/compose?text=${msg}`;
+                    } else if (rede.includes('Facebook')) {
+                        link = `https://www.messenger.com/new`; 
+                    } else if (rede.includes('Instagram')) {
+                        link = `https://ig.me/m/${userClean}`; 
+                    } else if (rede.includes('Threads')) {
+                        link = `https://www.instagram.com/direct/new/`; // Threads usa DM do Instagram
+                    } else if (rede.includes('Reclame Aqui')) {
+                        link = `https://www.reclameaqui.com.br/`; // Reclame Aqui não tem DM direta por URL
+                    }
+
                     window.open(link, '_blank');
                     
                     // Recarrega a tabela visualmente
