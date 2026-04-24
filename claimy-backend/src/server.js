@@ -202,6 +202,22 @@ fastify.get('/v1/admin/clients', async (request, reply) => {
   }
 });
 
+// Rota de Emergência para Limpar o Banco (Gatilho Manual)
+fastify.get('/v1/admin/reset-leads', async (request, reply) => {
+  const client = new Client(dbConfig);
+  try {
+    await client.connect();
+    // Força a deleção de tudo que for simulação ou que não tenha post_id real de API
+    await client.query("DELETE FROM social_leads WHERE post_id LIKE 'sim_%' OR rede IN ('Facebook', 'Instagram', 'Reclame Aqui')");
+    return { success: true, message: '🔥 Banco de Leads foi completamente purgado e resetado!' };
+  } catch (err) {
+    console.error('Erro ao resetar:', err.message);
+    reply.status(500).send({ error: err.message });
+  } finally {
+    await client.end();
+  }
+});
+
 // --- SOCIAL LISTENING (PERSISTÊNCIA EM BANCO DE DADOS) ---
 fastify.get('/v1/social-leads', async (request, reply) => {
   try {
