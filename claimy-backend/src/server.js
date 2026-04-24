@@ -1,14 +1,14 @@
 const fastify = require('fastify')({ logger: true });
 require('dotenv').config();
 
-// Configuração de CORS (Essencial para a Landing Page funcionar)
+// Configuração de CORS
 fastify.register(require('@fastify/cors'), {
   origin: '*',
   methods: ['GET', 'POST']
 });
 
-
 const { Client } = require('pg');
+const { scrapeReclameAqui } = require('./scraperEngine');
 
 // Configuração do Banco de Dados
 const dbConfig = {
@@ -207,7 +207,6 @@ fastify.get('/v1/admin/reset-leads', async (request, reply) => {
   const client = new Client(dbConfig);
   try {
     await client.connect();
-    // Força a deleção de tudo que for simulação ou que não tenha post_id real de API
     await client.query("DELETE FROM social_leads WHERE post_id LIKE 'sim_%' OR rede IN ('Facebook', 'Instagram', 'Reclame Aqui')");
     return { success: true, message: '🔥 Banco de Leads foi completamente purgado e resetado!' };
   } catch (err) {
@@ -215,6 +214,31 @@ fastify.get('/v1/admin/reset-leads', async (request, reply) => {
     reply.status(500).send({ error: err.message });
   } finally {
     await client.end();
+  }
+});
+
+// Gatilho Manual do Robô Extrator Profundo
+fastify.get('/v1/admin/trigger-scraper', async (request, reply) => {
+  // Retorna imediatamente para não dar timeout, a extração roda no background
+  reply.send({ success: true, message: '🕷️ Robô Extrator ativado! Ele está vasculhando o Reclame Aqui nos bastidores. Volte no Dashboard em 2 minutos.' });
+  
+  try {
+    const scrapedLeads = await scrapeReclameAqui();
+    if (scrapedLeads.length > 0) {
+      const client = new Client(dbConfig);
+      await client.connect();
+      for (const l of scrapedLeads) {
+        await client.query(
+          `INSERT INTO social_leads (post_id, usuario, rede, texto, tipo, alvo, status) 
+           VALUES ($1, $2, $3, $4, $5, $6, 'Pendente') ON CONFLICT (post_id) DO NOTHING`,
+          [l.post_id, l.usuario, l.rede, l.texto, l.tipo, l.alvo]
+        );
+      }
+      await client.end();
+      console.log('✅ Leads do Web Scraper salvos no banco de dados!');
+    }
+  } catch (error) {
+    console.error('❌ Erro no processamento do Scraper no background:', error);
   }
 });
 
