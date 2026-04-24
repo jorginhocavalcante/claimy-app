@@ -27,7 +27,11 @@ const initDB = async () => {
       CREATE TABLE IF NOT EXISTS clients (id SERIAL PRIMARY KEY, nome VARCHAR(255), cpf VARCHAR(20), rg VARCHAR(20), orgao_exp VARCHAR(20), estado_civil VARCHAR(50), profissao VARCHAR(100), cep VARCHAR(20), rua VARCHAR(255), numero VARCHAR(20), complemento VARCHAR(100), bairro VARCHAR(100), cidade_uf VARCHAR(100), banco VARCHAR(100), tipo_conta VARCHAR(50), agencia VARCHAR(20), conta VARCHAR(20), aceite BOOLEAN, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
       CREATE TABLE IF NOT EXISTS social_leads (id SERIAL PRIMARY KEY, post_id VARCHAR(255) UNIQUE, usuario VARCHAR(255), rede VARCHAR(50), texto TEXT, tipo VARCHAR(100), alvo VARCHAR(100), status VARCHAR(50) DEFAULT 'Pendente', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
     `);
-    console.log('🐘 Banco de Dados CLAIMY Inicializado e Pronto!');
+    
+    // Limpeza de segurança: Remove qualquer lead antigo de simulação que tenha ficado salvo no banco!
+    await client.query("DELETE FROM social_leads WHERE post_id LIKE 'sim_%'");
+    
+    console.log('🐘 Banco de Dados CLAIMY Inicializado e Pronto! (Leads Falsos Purgados)');
   } catch (err) {
     console.error('❌ Erro ao conectar ao Banco:', err.message);
   } finally {
