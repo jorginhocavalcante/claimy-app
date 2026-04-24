@@ -284,29 +284,11 @@ fastify.get('/v1/social-leads', async (request, reply) => {
       }
     }
 
-    // 3. Fallback: Se não achou leads reais, usa Simulador
-    if (newLeads.length === 0) {
-      const nomes = ['@lucas_dev', '@mariana_silva', '@joao.pedro99', '@ana_clara', '@carlos_m', '@bruno_oficial', '@fernanda.adv'];
-      const networks = ['X (Twitter)', 'Threads', 'Instagram', 'Facebook', 'Reclame Aqui'];
-      const problemas = [
-        { text: "Mais de 6 horas preso em Congonhas. Obrigado GOL por estragar minhas férias! 😡", type: "Voo Atrasado", target: "GOL" },
-        { text: "Mala despachada pra Miami e chegou em Paris. Piada a LATAM.", type: "Bagagem Extraviada", target: "LATAM" },
-        { text: "Alguém mais com cobrança 'Cesta de Serviços' no Nubank sem ter pedido nada?", type: "Cobrança Indevida", target: "Nubank" },
-        { text: "Cancelei a internet da Claro faz 2 meses e meu nome foi pro Serasa por causa de multa de fidelidade falsa.", type: "Multa Indevida", target: "Claro" },
-        { text: "Voo cancelado de última hora no Santos Dumont. Ninguém dá uma satisfação. Que descaso!", type: "Voo Cancelado", target: "Azul" }
-      ];
-      const numLeads = Math.floor(Math.random() * 3) + 1;
-      for(let i=0; i<numLeads; i++) {
-        const p = problemas[Math.floor(Math.random() * problemas.length)];
-        newLeads.push({
-          post_id: `sim_${Date.now()}_${Math.random().toString(36).substring(7)}`,
-          usuario: nomes[Math.floor(Math.random() * nomes.length)],
-          rede: networks[Math.floor(Math.random() * networks.length)],
-          texto: p.text,
-          tipo: p.type,
-          alvo: p.target
-        });
-      }
+    // 3. Verifica se encontrou leads novos
+    if (newLeads.length > 0) {
+      console.log(`✅ ${newLeads.length} novos leads reais encontrados nas APIs!`);
+    } else {
+      console.log(`⏳ Nenhum lead novo encontrado nesta varredura. Retornando histórico...`);
     }
 
     // 4. Salva no BD e Retorna Histórico
