@@ -274,33 +274,38 @@ fastify.get('/v1/social-leads', async (request, reply) => {
     // 2. Busca na API Real do Threads
     if (process.env.THREADS_ACCESS_TOKEN) {
       console.log("🔍 Iniciando busca real na API do Threads (Meta)...");
-      const threadsResponse = await fetch(`https://graph.threads.net/v1.0/media/search?q=${encodeURIComponent('cancelado OR atraso OR extravio OR abusiva OR "venda casada" OR juros')}&access_token=${process.env.THREADS_ACCESS_TOKEN}`);
+      const threadsResponse = await fetch(`https://graph.threads.net/v1.0/me/threads?fields=id,text,timestamp,username&access_token=${process.env.THREADS_ACCESS_TOKEN}`);
       if (threadsResponse.ok) {
         const threadsData = await threadsResponse.json();
         if (threadsData.data) {
           threadsData.data.forEach(post => {
-            let type = "Reclamação Geral";
             let textLower = (post.text || "").toLowerCase();
-            if (textLower.includes('atraso') || textLower.includes('cancelado')) type = "Atraso/Cancelamento Voo";
-            if (textLower.includes('mala') || textLower.includes('extravio')) type = "Bagagem Extraviada";
-            if (textLower.includes('cesta') || textLower.includes('juros')) type = "Taxa Abusiva Bancária";
-            
-            let target = "Empresa";
-            if (textLower.includes('gol')) target = "GOL";
-            if (textLower.includes('latam')) target = "LATAM";
-            if (textLower.includes('nubank')) target = "Nubank";
-            if (textLower.includes('claro')) target = "Claro";
+            // Filtro local (A API do Threads ainda não permite busca global pública por keywords, apenas na própria conta)
+            if (textLower.includes('cancelado') || textLower.includes('atraso') || textLower.includes('extravio') || textLower.includes('abusiva') || textLower.includes('venda casada') || textLower.includes('juros')) {
+                let type = "Reclamação Geral";
+                if (textLower.includes('atraso') || textLower.includes('cancelado')) type = "Atraso/Cancelamento Voo";
+                if (textLower.includes('mala') || textLower.includes('extravio')) type = "Bagagem Extraviada";
+                if (textLower.includes('cesta') || textLower.includes('juros')) type = "Taxa Abusiva Bancária";
+                
+                let target = "Empresa";
+                if (textLower.includes('gol')) target = "GOL";
+                if (textLower.includes('latam')) target = "LATAM";
+                if (textLower.includes('nubank')) target = "Nubank";
+                if (textLower.includes('claro')) target = "Claro";
 
-            newLeads.push({
-              post_id: `th_${post.id}`,
-              usuario: `ID: ${post.owner?.id || 'User'}`,
-              rede: 'Threads',
-              texto: post.text,
-              tipo: type,
-              alvo: target
-            });
+                newLeads.push({
+                  post_id: `th_${post.id}`,
+                  usuario: `@${post.username || 'User'}`,
+                  rede: 'Threads',
+                  texto: post.text,
+                  tipo: type,
+                  alvo: target
+                });
+            }
           });
         }
+      } else {
+        console.error("Erro na API Threads:", await threadsResponse.text());
       }
     }
 
