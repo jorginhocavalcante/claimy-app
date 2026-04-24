@@ -348,16 +348,24 @@
                             tr.style.borderTop = '1px solid rgba(255,255,255,0.05)';
                             
                             let networkColor = '#ffffff';
-                            if (l.rede === 'Twitter') networkColor = '#1DA1F2';
+                            if (l.rede === 'Twitter' || l.rede.includes('X')) networkColor = '#1DA1F2';
                             else if (l.rede === 'Instagram') networkColor = '#E1306C';
                             else if (l.rede === 'Facebook') networkColor = '#4267B2';
                             else if (l.rede === 'Reclame Aqui') networkColor = '#34A853';
 
+                            const diffMins = Math.floor((new Date() - new Date(l.created_at)) / 60000);
+                            const timeDisplay = isNaN(diffMins) ? l.tempo || 'agora' : (diffMins < 60 ? `Há ${diffMins} min` : `Há ${Math.floor(diffMins/60)}h`);
+
+                            const isAbordado = l.status === 'Abordado';
+                            const btnText = isAbordado ? 'Já Abordado' : 'Abordar no Direct';
+                            const btnColor = isAbordado ? 'var(--success)' : 'var(--accent)';
+                            const btnOpacity = isAbordado ? '0.5' : '1';
+
                             tr.innerHTML = `
-                                <td style="padding: 1.5rem; font-weight: 600; color: ${networkColor};">${l.usuario} <br><span style="font-size: 0.75rem; color: var(--text-dim); font-weight: 400;">${l.rede} • ${l.tempo}</span></td>
+                                <td style="padding: 1.5rem; font-weight: 600; color: ${networkColor};">${l.usuario} <br><span style="font-size: 0.75rem; color: var(--text-dim); font-weight: 400;">${l.rede} • ${timeDisplay}</span></td>
                                 <td style="padding: 1.5rem; font-size: 0.95rem; line-height: 1.4;">"${l.texto}"</td>
                                 <td style="padding: 1.5rem;"><span style="color: var(--accent); background: rgba(0, 242, 255, 0.1); padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">${l.alvo}</span><br><span style="font-size: 0.75rem; color: var(--text-dim); display: inline-block; margin-top: 5px;">${l.tipo}</span></td>
-                                <td style="padding: 1.5rem; text-align: center;"><button class="btn-gold" style="background: transparent; border: 1px solid var(--accent); color: var(--accent); font-size: 0.8rem; padding: 8px 15px;" onclick="alert('Isso enviaria uma Mensagem Direta (DM) oferecendo a avaliação grátis da Claimy para ${l.usuario}!')">Abordar no Direct</button></td>
+                                <td style="padding: 1.5rem; text-align: center;"><button class="btn-gold" style="background: transparent; border: 1px solid ${btnColor}; color: ${btnColor}; opacity: ${btnOpacity}; font-size: 0.8rem; padding: 8px 15px;" onclick="abordarLead(${l.id}, '${l.rede}', '${l.usuario.replace(/'/g, "\\'")}')" ${isAbordado ? 'disabled' : ''}>${btnText}</button></td>
                             `;
                             tbody.appendChild(tr);
                         });
@@ -366,6 +374,27 @@
                     console.error("Social Leads Error:", err);
                 }
             }
+
+            window.abordarLead = async function(id, rede, usuario) {
+                if(!confirm(`Deseja iniciar abordagem para ${usuario} no ${rede}?`)) return;
+                
+                try {
+                    // Atualiza o Status no BD
+                    await fetch(`https://claimy-app.onrender.com/v1/social-leads/${id}/action`, { method: 'POST' });
+                    
+                    // Abre o link de contato
+                    let msg = encodeURIComponent("Olá! Vi sua reclamação recente e a Claimy pode te ajudar a conseguir uma indenização em 24h sem nenhum custo inicial. Quer saber como?");
+                    let link = "https://wa.me/?text=" + msg;
+                    if(rede.includes('Twitter') || rede.includes('X')) link = `https://twitter.com/messages/compose?text=${msg}`;
+                    window.open(link, '_blank');
+                    
+                    // Recarrega a tabela visualmente
+                    loadSocialLeads();
+                } catch(e) {
+                    alert("Erro ao atualizar status do lead.");
+                }
+            };
+
 
             // Carrega na hora e fica atualizando
             loadRadar();

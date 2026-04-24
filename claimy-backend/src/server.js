@@ -25,6 +25,7 @@ const initDB = async () => {
       CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, email VARCHAR(255) UNIQUE NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
       CREATE TABLE IF NOT EXISTS findings (id SERIAL PRIMARY KEY, user_email VARCHAR(255) NOT NULL, type VARCHAR(50), description TEXT, estimate_value DECIMAL(10,2), confidence DECIMAL(3,2), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
       CREATE TABLE IF NOT EXISTS clients (id SERIAL PRIMARY KEY, nome VARCHAR(255), cpf VARCHAR(20), rg VARCHAR(20), orgao_exp VARCHAR(20), estado_civil VARCHAR(50), profissao VARCHAR(100), cep VARCHAR(20), rua VARCHAR(255), numero VARCHAR(20), complemento VARCHAR(100), bairro VARCHAR(100), cidade_uf VARCHAR(100), banco VARCHAR(100), tipo_conta VARCHAR(50), agencia VARCHAR(20), conta VARCHAR(20), aceite BOOLEAN, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+      CREATE TABLE IF NOT EXISTS social_leads (id SERIAL PRIMARY KEY, post_id VARCHAR(255) UNIQUE, usuario VARCHAR(255), rede VARCHAR(50), texto TEXT, tipo VARCHAR(100), alvo VARCHAR(100), status VARCHAR(50) DEFAULT 'Pendente', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
     `);
     console.log('🐘 Banco de Dados CLAIMY Inicializado e Pronto!');
   } catch (err) {
@@ -197,16 +198,15 @@ fastify.get('/v1/admin/clients', async (request, reply) => {
   }
 });
 
-// --- SOCIAL LISTENING (MULTICANAL COM INTEGRAÇÃO REAL API X E THREADS) ---
+// --- SOCIAL LISTENING (PERSISTÊNCIA EM BANCO DE DADOS) ---
 fastify.get('/v1/social-leads', async (request, reply) => {
   try {
-    let realLeads = [];
+    let newLeads = [];
 
-    // 1. Tenta buscar na API Real do X (Twitter) se houver credenciais
+    // 1. Busca na API Real do X (Twitter)
     if (process.env.TWITTER_CLIENT_ID && process.env.TWITTER_CLIENT_SECRET) {
       console.log("🔍 Iniciando busca real na API do X (Twitter)...");
       const credentials = Buffer.from(`${process.env.TWITTER_CLIENT_ID}:${process.env.TWITTER_CLIENT_SECRET}`).toString('base64');
-      
       const authResponse = await fetch('https://api.twitter.com/oauth2/token', {
         method: 'POST',
         headers: { 'Authorization': `Basic ${credentials}`, 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
@@ -215,16 +215,13 @@ fastify.get('/v1/social-leads', async (request, reply) => {
       
       if (authResponse.ok) {
         const authData = await authResponse.json();
-        const bearerToken = authData.access_token;
-        const query = '(cancelado OR atraso OR extravio OR abusiva OR "venda casada" OR juros) (GOL OR LATAM OR Nubank OR Itaú OR Claro OR Vivo) -is:retweet';
-        const searchResponse = await fetch(`https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(query)}&tweet.fields=created_at,author_id&max_results=10`, {
-          headers: { 'Authorization': `Bearer ${bearerToken}` }
+        const searchResponse = await fetch(`https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent('(cancelado OR atraso OR extravio OR abusiva OR "venda casada" OR juros) (GOL OR LATAM OR Nubank OR Itaú OR Claro OR Vivo) -is:retweet')}&tweet.fields=created_at,author_id&max_results=10`, {
+          headers: { 'Authorization': `Bearer ${authData.access_token}` }
         });
-
         if (searchResponse.ok) {
           const searchData = await searchResponse.json();
-          if (searchData.data && searchData.data.length > 0) {
-            const twitterLeads = searchData.data.map(tweet => {
+          if (searchData.data) {
+            searchData.data.forEach(tweet => {
               let type = "Reclamação Geral";
               let textLower = tweet.text.toLowerCase();
               if (textLower.includes('atraso') || textLower.includes('cancelado')) type = "Atraso/Cancelamento Voo";
@@ -240,29 +237,28 @@ fastify.get('/v1/social-leads', async (request, reply) => {
               if (textLower.includes('claro')) target = "Claro";
               if (textLower.includes('vivo')) target = "Vivo";
 
-              const diffMins = Math.floor((new Date() - new Date(tweet.created_at)) / 60000);
-              const timeDisplay = diffMins < 60 ? `Há ${diffMins} min` : `Há ${Math.floor(diffMins/60)}h`;
-
-              return { usuario: `ID: ${tweet.author_id}`, rede: 'X (Twitter)', tempo: timeDisplay, texto: tweet.text, tipo: type, alvo: target };
+              newLeads.push({
+                post_id: `tw_${tweet.id}`,
+                usuario: `ID: ${tweet.author_id}`,
+                rede: 'X (Twitter)',
+                texto: tweet.text,
+                tipo: type,
+                alvo: target
+              });
             });
-            console.log(`✅ ${twitterLeads.length} leads reais capturados da API do X!`);
-            realLeads = realLeads.concat(twitterLeads);
           }
-        } else { console.error("⚠️ Erro ao buscar tweets na API:", await searchResponse.text()); }
-      } else { console.error("⚠️ Erro na autenticação do Twitter:", await authResponse.text()); }
+        }
+      }
     }
 
-    // 2. Tenta buscar na API Real do Threads (Meta Graph API) se houver credencial
+    // 2. Busca na API Real do Threads
     if (process.env.THREADS_ACCESS_TOKEN) {
       console.log("🔍 Iniciando busca real na API do Threads (Meta)...");
-      const queryThreads = 'cancelado OR atraso OR extravio OR abusiva OR "venda casada" OR juros';
-      
-      const threadsResponse = await fetch(`https://graph.threads.net/v1.0/media/search?q=${encodeURIComponent(queryThreads)}&access_token=${process.env.THREADS_ACCESS_TOKEN}`);
-      
+      const threadsResponse = await fetch(`https://graph.threads.net/v1.0/media/search?q=${encodeURIComponent('cancelado OR atraso OR extravio OR abusiva OR "venda casada" OR juros')}&access_token=${process.env.THREADS_ACCESS_TOKEN}`);
       if (threadsResponse.ok) {
         const threadsData = await threadsResponse.json();
-        if (threadsData.data && threadsData.data.length > 0) {
-          const leadsThreads = threadsData.data.map(post => {
+        if (threadsData.data) {
+          threadsData.data.forEach(post => {
             let type = "Reclamação Geral";
             let textLower = (post.text || "").toLowerCase();
             if (textLower.includes('atraso') || textLower.includes('cancelado')) type = "Atraso/Cancelamento Voo";
@@ -275,65 +271,80 @@ fastify.get('/v1/social-leads', async (request, reply) => {
             if (textLower.includes('nubank')) target = "Nubank";
             if (textLower.includes('claro')) target = "Claro";
 
-            return {
+            newLeads.push({
+              post_id: `th_${post.id}`,
               usuario: `ID: ${post.owner?.id || 'User'}`,
               rede: 'Threads',
-              tempo: new Date(post.timestamp).toLocaleDateString(),
               texto: post.text,
               tipo: type,
               alvo: target
-            };
+            });
           });
-          console.log(`✅ ${leadsThreads.length} leads reais capturados da API do Threads!`);
-          realLeads = realLeads.concat(leadsThreads);
         }
-      } else {
-        console.error("⚠️ Erro ao buscar posts na API Threads:", await threadsResponse.text());
       }
     }
 
-    // Retorna os leads se qualquer uma das APIs funcionar
-    if (realLeads.length > 0) {
-      // Embaralha para ficar visualmente dinâmico no Dashboard (Misturar X com Threads)
-      realLeads = realLeads.sort(() => Math.random() - 0.5);
-      return { success: true, leads: realLeads };
+    // 3. Fallback: Se não achou leads reais, usa Simulador
+    if (newLeads.length === 0) {
+      const nomes = ['@lucas_dev', '@mariana_silva', '@joao.pedro99', '@ana_clara', '@carlos_m', '@bruno_oficial', '@fernanda.adv'];
+      const networks = ['X (Twitter)', 'Threads', 'Instagram', 'Facebook', 'Reclame Aqui'];
+      const problemas = [
+        { text: "Mais de 6 horas preso em Congonhas. Obrigado GOL por estragar minhas férias! 😡", type: "Voo Atrasado", target: "GOL" },
+        { text: "Mala despachada pra Miami e chegou em Paris. Piada a LATAM.", type: "Bagagem Extraviada", target: "LATAM" },
+        { text: "Alguém mais com cobrança 'Cesta de Serviços' no Nubank sem ter pedido nada?", type: "Cobrança Indevida", target: "Nubank" },
+        { text: "Cancelei a internet da Claro faz 2 meses e meu nome foi pro Serasa por causa de multa de fidelidade falsa.", type: "Multa Indevida", target: "Claro" },
+        { text: "Voo cancelado de última hora no Santos Dumont. Ninguém dá uma satisfação. Que descaso!", type: "Voo Cancelado", target: "Azul" }
+      ];
+      const numLeads = Math.floor(Math.random() * 3) + 1;
+      for(let i=0; i<numLeads; i++) {
+        const p = problemas[Math.floor(Math.random() * problemas.length)];
+        newLeads.push({
+          post_id: `sim_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+          usuario: nomes[Math.floor(Math.random() * nomes.length)],
+          rede: networks[Math.floor(Math.random() * networks.length)],
+          texto: p.text,
+          tipo: p.type,
+          alvo: p.target
+        });
+      }
     }
 
+    // 4. Salva no BD e Retorna Histórico
+    const client = new Client(dbConfig);
+    try {
+      await client.connect();
+      for (const l of newLeads) {
+        await client.query(
+          `INSERT INTO social_leads (post_id, usuario, rede, texto, tipo, alvo, status) 
+           VALUES ($1, $2, $3, $4, $5, $6, 'Pendente') ON CONFLICT (post_id) DO NOTHING`,
+          [l.post_id, l.usuario, l.rede, l.texto, l.tipo, l.alvo]
+        );
+      }
+      
+      const dbResult = await client.query("SELECT * FROM social_leads ORDER BY created_at DESC LIMIT 50");
+      return { success: true, leads: dbResult.rows };
+    } finally {
+      await client.end();
+    }
   } catch (error) {
-    console.error("❌ Falha crítica nas integrações de Social Listening:", error.message);
+    console.error("❌ Erro em /v1/social-leads:", error.message);
+    reply.status(500).send({ error: "Erro interno no servidor" });
   }
+});
 
-  // FALLBACK DE SEGURANÇA: Retorna leads simulados se as APIs falharem, baterem Rate Limit, ou não houver credencial
-  console.log("🔄 Redirecionando para o motor de Simulação (Fallback)...");
-  const nomes = ['@lucas_dev', '@mariana_silva', '@joao.pedro99', '@ana_clara', '@carlos_m', '@bruno_oficial', '@fernanda.adv'];
-  const networks = ['X (Twitter)', 'Threads', 'Instagram', 'Facebook', 'Reclame Aqui'];
-  const problemas = [
-    { text: "Mais de 6 horas preso em Congonhas. Obrigado GOL por estragar minhas férias! 😡", type: "Voo Atrasado", target: "GOL" },
-    { text: "Mala despachada pra Miami e chegou em Paris. Piada a LATAM.", type: "Bagagem Extraviada", target: "LATAM" },
-    { text: "Alguém mais com cobrança 'Cesta de Serviços' no Nubank sem ter pedido nada?", type: "Cobrança Indevida", target: "Nubank" },
-    { text: "Cancelei a internet da Claro faz 2 meses e meu nome foi pro Serasa por causa de multa de fidelidade falsa.", type: "Multa Indevida", target: "Claro" },
-    { text: "Voo cancelado de última hora no Santos Dumont. Ninguém dá uma satisfação. Que descaso!", type: "Voo Cancelado", target: "Azul" },
-    { text: "Estou há 40 minutos no telefone tentando cancelar a vivo. Eles desligam na minha cara!", type: "Venda Casada / Abusiva", target: "Vivo" }
-  ];
-
-  const generateLead = () => {
-    const p = problemas[Math.floor(Math.random() * problemas.length)];
-    const timeAgo = Math.floor(Math.random() * 15) + 1; // 1 a 15 min atrás
-    return {
-      usuario: nomes[Math.floor(Math.random() * nomes.length)],
-      rede: networks[Math.floor(Math.random() * networks.length)],
-      tempo: `Há ${timeAgo} min`,
-      texto: p.text,
-      tipo: p.type,
-      alvo: p.target
-    };
-  };
-
-  const numLeads = Math.floor(Math.random() * 4) + 2;
-  const leads = [];
-  for(let i=0; i<numLeads; i++) leads.push(generateLead());
-
-  return { success: true, leads };
+// --- AÇÃO DE VENDA (ATUALIZAR STATUS DO LEAD) ---
+fastify.post('/v1/social-leads/:id/action', async (request, reply) => {
+  const leadId = request.params.id;
+  const client = new Client(dbConfig);
+  try {
+    await client.connect();
+    await client.query("UPDATE social_leads SET status = 'Abordado' WHERE id = $1", [leadId]);
+    return { success: true, message: 'Status atualizado para Abordado!' };
+  } catch (err) {
+    return { success: false, error: err.message };
+  } finally {
+    await client.end();
+  }
 });
 
 // Health Check
